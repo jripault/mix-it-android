@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright 2010 Peter Kuterna
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<resources>
+  <string name="sync_only_wifi_key">syncOnlyWifi</string>
+<!--  <string name="sync_interval_key">syncInterval</string>
+  <string name="notify_new_sessions_key">notifyNew</string>
+  <string name="notify_changed_starred_sessions_key">notifyChanged</string>
+  <string name="visualize_parallel_starred_sessions_key">highlightParallelStarred</string>
+  <string name="focus_session_during_conference_key">focusSessionDuringConference</string>
+  <string name="gray_out_passed_sessions_key">grayOutPassedSessions</string>-->
+</resources>
