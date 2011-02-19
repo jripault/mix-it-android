@@ -64,8 +64,8 @@ public class RemoteExecutor {
 	 */
 	public JSONArray executeRequest(HttpUriRequest request) throws JSONHandlerException {
 	    try {
-		    request.setHeader("Accept", "application/json");
-		    request.setHeader("Content-type", "application/json");
+/*		    request.setHeader("Accept", "application/json");
+		    request.setHeader("Content-type", "application/json");*/
 		    final HttpResponse resp = mHttpClient.execute(request);
 	        final int status = resp.getStatusLine().getStatusCode();
 	        if (status != HttpStatus.SC_OK) {

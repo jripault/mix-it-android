@@ -6,12 +6,12 @@ package fr.mixit.android;
  * Time: 10:28 PM
  */
 public class Constants {
-	                        //http://www.mix-it.fr/speakers/json
+
 	public static final String REST_BASE_URL = "http://mix-it.fr/";
-//	public static final String REST_BASE_URL = "http://cfp.devoxx.com/rest/v1/";
-//	public static final String PRESENTATIONS_URL = REST_BASE_URL + "events/1/presentations";
-//  public static final String SPEAKERS_URL = REST_BASE_URL + "events/1/speakers";
+	public static final String SESSIONS_URL = REST_BASE_URL + "sessions/json";
 	public static final String SPEAKERS_URL = REST_BASE_URL + "speakers/json";
+	public static final String TRACKS_URL =  REST_BASE_URL + "tracks/json";
+	public static final String SLOTS_URL =  REST_BASE_URL + "slots/json";
 /* 	public static final String ROOMS_URL = REST_BASE_URL + "events/1/schedule/rooms";
 	public static final String SCHEDULE_URL = REST_BASE_URL + "events/1/schedule";
 	public static final String MYSCHEDULE_ACTIVATE_URL = REST_BASE_URL + "events/users/activate";

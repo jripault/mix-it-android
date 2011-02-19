@@ -97,9 +97,9 @@ public class HomeActivity extends Activity implements DetachableResultReceiver.R
 	/** Handle "sessions" action. */
 	public void onSessionsClick(View v) {
 		//TODO implement it
-/*	    // Launch sessions overview activity
+	    // Launch sessions overview activity
 	    final Intent intent = new Intent(this, SessionsOverviewActivity.class);
-	    startActivity(intent);*/
+	    startActivity(intent);
 	}
 
 	/** Handle "starred" action. */

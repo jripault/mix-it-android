@@ -58,8 +58,8 @@ public class SyncUtils {
         final HttpParams params = new BasicHttpParams();
 
         // Use generous timeouts for slow mobile networks
-        HttpConnectionParams.setConnectionTimeout(params, 20 * SECOND_IN_MILLIS);
-        HttpConnectionParams.setSoTimeout(params, 20 * SECOND_IN_MILLIS);
+        HttpConnectionParams.setConnectionTimeout(params, 30 * SECOND_IN_MILLIS);
+        HttpConnectionParams.setSoTimeout(params, 30 * SECOND_IN_MILLIS);
 
         HttpConnectionParams.setSocketBufferSize(params, 8192);
 //        HttpProtocolParams.setUserAgent(params, buildUserAgent(context));

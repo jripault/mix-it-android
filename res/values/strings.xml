@@ -15,11 +15,17 @@
     <string name="btn_starred">Starred</string>
     <string name="btn_speakers">Speakers</string>
 
+	<string name="empty_sessions">No sessions found</string>
 	<string name="empty_speakers">No speakers found</string>
 
     <string name="now_playing_loading">Looking up nearby sessions\u2026</string>
     <string name="now_playing_no_results">No sessions nearby.</string>
     <string name="now_playing_next_up">See which sessions are up next.</string>
+
+	<string name="sessions_track">Track</string>
+	<string name="sessions_all">All</string>
+
+	<string name="session_subtitle">%2$s in %3$s</string>
 
     <string name="title_sessions">Sessions</string>
     <string name="title_speakers">Speakers</string>

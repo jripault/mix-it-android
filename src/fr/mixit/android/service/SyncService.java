@@ -12,7 +12,10 @@ import android.os.ResultReceiver;
 import android.util.Log;
 import fr.mixit.android.Constants;
 import fr.mixit.android.R;
+import fr.mixit.android.io.RemoteSessionsHandler;
+import fr.mixit.android.io.RemoteSlotsHandler;
 import fr.mixit.android.io.RemoteSpeakersHandler;
+import fr.mixit.android.io.RemoteTracksHandler;
 import fr.mixit.android.model.RequestHash;
 import fr.mixit.android.utils.SyncUtils;
 import org.apache.http.client.HttpClient;
@@ -35,7 +38,8 @@ public class SyncService extends IntentService {
 	public static final int STATUS_FINISHED = 0x3;
 
 	private static final String [] URLS = {
-		Constants.SPEAKERS_URL,
+			Constants.SESSIONS_URL,
+			Constants.SPEAKERS_URL,
 	};
 
 	private static final int VERSION_NONE = 0;
@@ -99,7 +103,16 @@ public class SyncService extends IntentService {
             boolean performRemoteSync = performRemoteSync(mResolver, mHttpClient, intent, context);
             if (performRemoteSync) {
             	// Parse values from REST interface
-	            RequestHash result = mRemoteExecutor.executeGet(Constants.SPEAKERS_URL, new RemoteSpeakersHandler());
+	            RequestHash result = mRemoteExecutor.executeGet(Constants.TRACKS_URL, new RemoteTracksHandler());
+//				SyncUtils.updateLocalMd5(mResolver, result.getUrl(), result.getMd5());
+
+	            result = mRemoteExecutor.executeGet(Constants.SLOTS_URL, new RemoteSlotsHandler());
+//	            SyncUtils.updateLocalMd5(mResolver, result.getUrl(), result.getMd5());
+
+	            result = mRemoteExecutor.executeGet(Constants.SPEAKERS_URL, new RemoteSpeakersHandler());
+//	            SyncUtils.updateLocalMd5(mResolver, result.getUrl(), result.getMd5());
+
+	            result = mRemoteExecutor.executeGet(Constants.SESSIONS_URL, new RemoteSessionsHandler());
 //	            SyncUtils.updateLocalMd5(mResolver, result.getUrl(), result.getMd5());
 
 	            // Save last remote sync time

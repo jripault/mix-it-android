@@ -92,14 +92,14 @@ public class RemoteSpeakersHandler extends JSONHandler {
 		}
 
 		// delete sessions with speakers deleted
-/*        if (isRemoteSync() && nrEntries > 0) {
+        if (isRemoteSync() && nrEntries > 0) {
 		    for (String lostId : getLostIds(speakerIds, MixItContract.Speakers.CONTENT_URI, SpeakersQuery.PROJECTION, SpeakersQuery.SPEAKER_ID, resolver)) {
 		    	Uri deleteUri = MixItContract.Speakers.buildSessionsDirUri(lostId);
 		    	batch.add(ContentProviderOperation.newDelete(deleteUri).build());
 		    	deleteUri = MixItContract.Speakers.buildSpeakerUri(lostId);
 		    	batch.add(ContentProviderOperation.newDelete(deleteUri).build());
 		    }
-        }*/
+        }
 
         return batch;
 	}

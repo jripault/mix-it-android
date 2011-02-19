@@ -19,6 +19,8 @@
  */
 package fr.mixit.android.utils;
 
+import android.text.format.Time;
+
 import java.util.regex.Pattern;
 
 
@@ -30,6 +32,8 @@ public class ParserUtils {
     /** Used to sanitize a string to be {@link android.net.Uri} safe. */
     private static final Pattern sSanitizePattern = Pattern.compile("[^a-z0-9-_]");
     private static final Pattern sParenPattern = Pattern.compile("\\(.*?\\)");
+
+	private static Time sTime = new Time();
 
     /**
      * Sanitize the given string to be {@link android.net.Uri} safe for building
@@ -51,5 +55,14 @@ public class ParserUtils {
         }
         return sSanitizePattern.matcher(input.toLowerCase()).replaceAll("");
     }
+
+	/**
+	 * Parse the given string as a RFC 3339 timestamp, returning the value as
+	 * milliseconds since the epoch.
+	 */
+	public static long parseTime(String time) {
+	    sTime.parse3339(time);
+	    return sTime.toMillis(false);
+	}
 
 }
