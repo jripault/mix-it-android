@@ -20,6 +20,10 @@
 			</intent-filter>
 		</activity>
 
+		<activity android:name=".ui.SessionsOverviewActivity"
+			android:theme="@style/Theme.MixITIndexer"
+			android:label="@string/title_sessions" />
+
 		<activity android:name=".ui.SpeakersActivity"
 			android:theme="@style/Theme.MixITIndexer"
 			android:label="@string/title_speakers">
@@ -28,6 +32,17 @@
 				<category android:name="android.intent.category.DEFAULT" />
 				<category android:name="android.intent.category.TAB" />
 				<data android:mimeType="vnd.android.cursor.dir/vnd.mixit.speaker" />
+			</intent-filter>
+		</activity>
+
+		<activity android:name=".ui.SessionsActivity"
+			android:theme="@style/Theme.MixIT"
+			android:label="@string/title_sessions">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.TAB" />
+				<data android:mimeType="vnd.android.cursor.dir/vnd.mixit.session" />
 			</intent-filter>
 		</activity>
 

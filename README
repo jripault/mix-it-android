@@ -1,0 +1,45 @@
+How to build the application :
+- Install Android SDK (http://developer.android.com/sdk/index.html)
+
+- Install the JDK (http://java.sun.com/javase/downloads/index.jsp) if you haven't it already
+
+- Install your favorite IDE (Eclipse or IDEA or nothing more that the notepad ^^)
+If Eclipse : You must install the ADT plugin : http://developer.android.com/sdk/eclipse-adt.html#installing
+
+- MAJ your SDK :
++ On Eclipse : open the AVD manager from Window -> Android SDK and AVD Manager -> Available Package -> select Android repository select latest SDK Platforms, samples and other elements and Install Selected
++ On IDEA : Like command line
++ WIth command line : run YourSDKPath/tools/android update sdk
+
+
+- Importing project :
++ On Eclipse :
+* Create a new android project from existing source, selecting the directory where you checkout the project.
+* Select the Build Target : Google 2.2 API Level 8
+* Choose a name for your project (MixIt is nice)
+
++ On IDEA :
+* Create a new project from existing source, selecting the directory where you checkout the project.
+* Edit the Project Properties : Modules -> MixIt -> Android -> Select the Android platform 2.2 if it doesn't exist create one from New and select YourSDKPath and Build Target Android 2.2
+
++ With commond line : see http://developer.android.com/guide/developing/other-ide.html#Building
+
+(Beware of correctly selecting JDK 6 to build upon, otherwise @Override aren't understood)
+
+
+- Creating an emulator :
++ In Eclipse :
+* open the AVD manager from Window -> Android SDK and AVD Manager
+* new, choose a name, select a API Level target of at least 8, indicate 16mo of sd card
++ In IDEA :
+* It's automatically choosen
++ With common line : run from the sdk path :
+./mksdcard -l sdcard-avd2.2_API8 16M ~/.android/sdcard-avd2.2_API8
+./android create avd -n avd2.2_API8 -t X (X is the id of a the 2.2 or API Level 8 version got by ./android list targets)
+./emulator -avd avd2.2_API8 -sdcard ~/.android/sdcard-avd2.2_API8
+
+
+- Running the app :
++ In Eclipse : Run
++ In IDEA : Run
++ With common line : see http://developer.android.com/guide/developing/other-ide.html#Running
