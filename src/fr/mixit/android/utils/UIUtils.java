@@ -24,10 +24,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.LevelListDrawable;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.format.DateUtils;
 import android.text.format.Time;
+import android.text.method.LinkMovementMethod;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -52,6 +58,8 @@ public class UIUtils {
 	private static final int BRIGHTNESS_THRESHOLD = 150;
 
 	private static Time sTime = new Time();
+
+	private static StyleSpan sBoldSpan = new StyleSpan(Typeface.BOLD);
 
 	public static void setTitleBarColor(View titleBarView, int color) {
 	    final ViewGroup titleBar = (ViewGroup) titleBarView;
@@ -133,17 +141,17 @@ public class UIUtils {
 
 
 	/**
-	 * Format and return the given {@link Blocks} and {@link Rooms} values using
+	 * Format and return the given {@link fr.mixit.android.provider.MixItContract.Slots} values using
 	 * {@link #CONFERENCE_TIME_ZONE}.
 	 */
-	public static String formatSessionSubtitle(long blockStart, long blockEnd,
+	public static String formatSessionSubtitle(long slotStart, long slotEnd,
 	        String roomName, Context context) {
 	    TimeZone.setDefault(CONFERENCE_TIME_ZONE);
 
 	    final CharSequence timeString = DateUtils.formatDateRange(context,
-	            blockStart, blockEnd, TIME_FLAGS);
+	            slotStart, slotEnd, TIME_FLAGS);
 
-	    return context.getString(R.string.session_subtitle, timeString, roomName);
+	    return context.getString(R.string.session_subtitle, ""/*timeString*/, roomName);
 	}
 
 	public static void setSessionTitleColor(long blockStart, long blockEnd, TextView title,
@@ -160,6 +168,46 @@ public class UIUtils {
 	    final Resources res = title.getResources();
 	    title.setTextColor(res.getColor(colorId));
 	    subtitle.setTextColor(res.getColor(subColorId));
+	}
+
+	/**
+	 * Populate the given {@link TextView} with the requested text, formatting
+	 * through {@link android.text.Html#fromHtml(String)} when applicable. Also sets
+	 * {@link TextView#setMovementMethod} so inline links are handled.
+	 */
+	public static void setTextMaybeHtml(TextView view, String text) {
+	    if (text.contains("<") && text.contains(">")) {
+	        view.setText(Html.fromHtml(text));
+	        view.setMovementMethod(LinkMovementMethod.getInstance());
+	    } else {
+	        view.setText(text);
+	    }
+	}
+
+	/**
+	 * Given a snippet string with matching segments surrounded by curly
+	 * braces, turn those areas into bold spans, removing the curly braces.
+	 */
+	public static Spannable buildStyledSnippet(String snippet) {
+	    final SpannableStringBuilder builder = new SpannableStringBuilder(snippet);
+
+	    // Walk through string, inserting bold snippet spans
+	    int startIndex = -1, endIndex = -1, delta = 0;
+	    while ((startIndex = snippet.indexOf('{', endIndex)) != -1) {
+	        endIndex = snippet.indexOf('}', startIndex);
+
+	        // Remove braces from both sides
+	        builder.delete(startIndex - delta, startIndex - delta + 1);
+	        builder.delete(endIndex - delta - 1, endIndex - delta);
+
+	        // Insert bold style
+	        builder.setSpan(sBoldSpan, startIndex - delta, endIndex - delta - 1,
+	                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+	        delta += 2;
+	    }
+
+	    return builder;
 	}
 
 }

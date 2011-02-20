@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.BaseColumns;
+import android.text.Spannable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -19,6 +20,8 @@ import fr.mixit.android.provider.MixItContract;
 import fr.mixit.android.ui.widget.PinnedHeaderListView;
 import fr.mixit.android.utils.NotifyingAsyncQueryHandler;
 import fr.mixit.android.utils.UIUtils;
+
+import static fr.mixit.android.utils.UIUtils.buildStyledSnippet;
 
 /**
  * {@link android.app.ListActivity} to list the {@link fr.mixit.android.provider.MixItContract.Speakers}
@@ -48,15 +51,15 @@ public class SpeakersActivity extends ListActivity implements NotifyingAsyncQuer
 	    final Uri speakersUri = getIntent().getData();
 
 	    String[] projection;
-//	    if (!MixItContract.Speakers.isSearchUri(speakersUri)) {
+	    if (!MixItContract.Speakers.isSearchUri(speakersUri)) {
 	        mAdapter = new SpeakersAdapter(this);
 	        projection = SpeakersQuery.PROJECTION;
 	        getListView().setFastScrollEnabled(true);
-/*	    } else {
+	    } else {
 	        mAdapter = new SearchAdapter(this);
 	        projection = SearchQuery.PROJECTION;
 	        getListView().setFastScrollEnabled(false);
-	    }*/
+	    }
 
 	    setListAdapter(mAdapter);
 
@@ -188,9 +191,9 @@ public class SpeakersActivity extends ListActivity implements NotifyingAsyncQuer
 		    SpeakerItemViews views = (SpeakerItemViews) view.getTag();
 	        views.nameView.setText(cursor.getString(SpeakersQuery.LAST_NAME) + " " + cursor.getString(SpeakersQuery.FIRST_NAME));
 	        views.companyView.setText(cursor.getString(SpeakersQuery.COMPANY));
-/*	        final boolean starred = cursor.getInt(SpeakersQuery.CONTAINS_STARRED) != 0;
+	        final boolean starred = cursor.getInt(SpeakersQuery.CONTAINS_STARRED) != 0;
 	        views.starButton.setVisibility(starred ? View.VISIBLE : View.INVISIBLE);
-	        views.starButton.setChecked(starred);*/
+	        views.starButton.setChecked(starred);
 	    }
 
 		private void bindSectionHeader(View view, int position, boolean displaySectionHeaders) {
@@ -346,6 +349,47 @@ public class SpeakersActivity extends ListActivity implements NotifyingAsyncQuer
 		}
 	}
 
+	/**
+	 * {@link CursorAdapter} that renders a {@link SearchQuery}.
+	 */
+	private class SearchAdapter extends BaseAdapter implements PinnedHeaderListView.PinnedHeaderAdapter {
+	    public SearchAdapter(Context context) {
+	        super(context);
+	    }
+
+		public int getPinnedHeaderState(int position) {
+			return 0;
+		}
+
+		public void configurePinnedHeader(View header, int position, int alpha) {
+		}
+
+	    /** {@inheritDoc} */
+	    @Override
+	    public View newView(Context context, Cursor cursor, ViewGroup parent) {
+	        View v = getLayoutInflater().inflate(R.layout.list_item_speaker, parent, false);
+			findAndCacheViews(v);
+			return v;
+	    }
+
+	    /** {@inheritDoc} */
+	    @Override
+	    public void bindView(View view, Context context, Cursor cursor) {
+		    SpeakerItemViews views = (SpeakerItemViews) view.getTag();
+	        final String name = cursor.getString(SearchQuery.LAST_NAME) + " " + cursor.getString(SearchQuery.FIRST_NAME);
+	        views.nameView.setText(name);
+	        final String snippet = cursor.getString(SearchQuery.SEARCH_SNIPPET);
+	        final Spannable styledSnippet = buildStyledSnippet(snippet);
+	        views.companyView.setText(styledSnippet);
+	        final boolean starred = cursor.getInt(SearchQuery.CONTAINS_STARRED) != 0;
+	        views.starButton.setVisibility(starred ? View.VISIBLE : View.INVISIBLE);
+	        views.starButton.setChecked(starred);
+	        views.dividerView.setVisibility(View.GONE);
+	        views.headerView.setVisibility(View.GONE);
+	    }
+
+	}
+
 	/** {@link fr.mixit.android.provider.MixItContract.Speakers} query parameters. */
 	private interface SpeakersQuery {
 	    String[] PROJECTION = {
@@ -354,6 +398,7 @@ public class SpeakersActivity extends ListActivity implements NotifyingAsyncQuer
 	            MixItContract.Speakers.FIRST_NAME,
 	            MixItContract.Speakers.LAST_NAME,
 	            MixItContract.Speakers.COMPANY,
+                MixItContract.Speakers.CONTAINS_STARRED,
 	    };
 
 	    int _ID = 0;
@@ -361,6 +406,26 @@ public class SpeakersActivity extends ListActivity implements NotifyingAsyncQuer
 	    int FIRST_NAME = 2;
 	    int LAST_NAME = 3;
 	    int COMPANY = 4;
+        int CONTAINS_STARRED = 5;
 	}
+
+    /** {@link fr.mixit.android.provider.MixItContract.Speakers} search query parameters. */
+    private interface SearchQuery {
+        String[] PROJECTION = {
+                BaseColumns._ID,
+                MixItContract.Speakers.SPEAKER_ID,
+                MixItContract.Speakers.FIRST_NAME,
+                MixItContract.Speakers.LAST_NAME,
+                MixItContract.Speakers.SEARCH_SNIPPET,
+                MixItContract.Speakers.CONTAINS_STARRED,
+        };
+
+        int _ID = 0;
+        int SPEAKER_ID = 1;
+        int FIRST_NAME = 2;
+        int LAST_NAME = 3;
+        int SEARCH_SNIPPET = 4;
+        int CONTAINS_STARRED = 5;
+    }
 
 }

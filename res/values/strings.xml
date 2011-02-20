@@ -17,19 +17,31 @@
 
 	<string name="empty_sessions">No sessions found</string>
 	<string name="empty_speakers">No speakers found</string>
+	<string name="empty_session_detail">No session details found</string>
 
     <string name="now_playing_loading">Looking up nearby sessions\u2026</string>
     <string name="now_playing_no_results">No sessions nearby.</string>
     <string name="now_playing_next_up">See which sessions are up next.</string>
 
+	<string name="speaker_bio">Bio</string>
+	<string name="speaker_sessions">Presentations</string>
+
 	<string name="sessions_track">Track</string>
 	<string name="sessions_all">All</string>
 
-	<string name="session_subtitle">%2$s in %3$s</string>
+	<string name="session_summary">Summary</string>
+	<string name="session_parallel">In parallel</string>
+	<string name="session_subtitle">%1$s in %2$s</string>
+	<string name="session_speakers">Speakers</string>
+	<string name="session_type">Type</string>
 
+	<string name="title_share">Share using</string>
     <string name="title_sessions">Sessions</string>
     <string name="title_speakers">Speakers</string>
+	<string name="title_speaker_detail">Speaker detail</string>
     <string name="title_schedule">Schedule</string>
+
+	<string name="share_template">Checking out \'%1$s\' at #mixit</string>
 
     <string name="toast_sync_error">Sync error: %1$s</string>
 

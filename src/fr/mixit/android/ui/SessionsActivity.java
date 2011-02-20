@@ -47,14 +47,16 @@ import fr.mixit.android.ui.widget.PinnedHeaderListView;
 import fr.mixit.android.utils.NotifyingAsyncQueryHandler;
 import fr.mixit.android.utils.UIUtils;
 
+import static fr.mixit.android.utils.UIUtils.buildStyledSnippet;
+
 public class SessionsActivity extends ListActivity implements NotifyingAsyncQueryHandler.AsyncQueryListener {
 
     private static final String TAG = "SessionsActivity";
     
-    public static final String EXTRA_TRACK_COLOR = "net.peterkuterna.android.apps.devoxxsched.extra.TRACK_COLOR";
-    public static final String EXTRA_NO_WEEKDAY_HEADER = "net.peterkuterna.android.apps.devoxxsched.extra.NO_WEEKDAY_HEADER";
-    public static final String EXTRA_HIHGLIGHT_PARALLEL_STARRED = "net.peterkuterna.android.apps.devoxxsched.extra.HIGHLIGHT_PARALLEL_STARRED";
-    public static final String EXTRA_FOCUS_CURRENT_NEXT_SESSION = "net.peterkuterna.android.apps.devoxxsched.extra.FOCUS_CURRENT_NEXT_SESSION";
+    public static final String EXTRA_TRACK_COLOR = "fr.mixit.android.extra.TRACK_COLOR";
+    public static final String EXTRA_NO_WEEKDAY_HEADER = "fr.mixit.android.extra.NO_WEEKDAY_HEADER";
+    public static final String EXTRA_HIHGLIGHT_PARALLEL_STARRED = "fr.mixit.android.extra.HIGHLIGHT_PARALLEL_STARRED";
+    public static final String EXTRA_FOCUS_CURRENT_NEXT_SESSION = "fr.mixit.android.extra.FOCUS_CURRENT_NEXT_SESSION";
 
     private static final int DAY_FLAGS = DateUtils.FORMAT_SHOW_WEEKDAY;
 
@@ -102,15 +104,15 @@ public class SessionsActivity extends ListActivity implements NotifyingAsyncQuer
 
         String[] projection;
         String sort;
-//        if (!MixItContract.Sessions.isSearchUri(sessionsUri)) {
+        if (!MixItContract.Sessions.isSearchUri(sessionsUri)) {
             mAdapter = new SessionsAdapter(this);
             projection = SessionsQuery.PROJECTION;
             sort = SESSIONS_SORT;
-/*        } else {
+        } else {
            	mAdapter = new SearchAdapter(this);
             projection = SearchQuery.PROJECTION;
             sort = MixItContract.Sessions.DEFAULT_SORT;
-        }*/
+        }
 
         setListAdapter(mAdapter);
         
@@ -548,7 +550,7 @@ public class SessionsActivity extends ListActivity implements NotifyingAsyncQuer
     /**
      * {@link android.widget.CursorAdapter} that renders a {@link SearchQuery}.
      */
-/*    private class SearchAdapter extends BaseAdapter implements PinnedHeaderListView.PinnedHeaderAdapter {
+    private class SearchAdapter extends BaseAdapter implements PinnedHeaderListView.PinnedHeaderAdapter {
     
     	public SearchAdapter(Context context) {
             super(context);
@@ -562,15 +564,15 @@ public class SessionsActivity extends ListActivity implements NotifyingAsyncQuer
 		}
 
 		/** {@inheritDoc} */
-/*        @Override
+        @Override
         public View newView(Context context, Cursor cursor, ViewGroup parent) {
 			View v = getLayoutInflater().inflate(R.layout.list_item_session, parent,false);
 			findAndCacheViews(v);
 			return v;
-        }*/
+        }
 
         /** {@inheritDoc} */
-/*        @Override
+        @Override
         public void bindView(View view, Context context, Cursor cursor) {
         	SessionItemViews views = (SessionItemViews) view.getTag();
         	views.trackView.setBackgroundColor(cursor.getInt(SearchQuery.TRACK_COLOR));
@@ -584,7 +586,7 @@ public class SessionsActivity extends ListActivity implements NotifyingAsyncQuer
             views.dividerView.setVisibility(View.GONE);
             views.headerView.setVisibility(View.GONE);
         }
-    }*/
+    }
 
     private Runnable mRefreshSessionsRunnable = new Runnable() {
         public void run() {
@@ -608,10 +610,10 @@ public class SessionsActivity extends ListActivity implements NotifyingAsyncQuer
                 MixItContract.Sessions.TITLE,
 			    MixItContract.Sessions.ROOM,
 /*			    MixItContract.Sessions.STARRED,
-                Blocks.BLOCK_START,
-                Blocks.BLOCK_END,
-                Tracks.TRACK_COLOR,
-                Sessions.STARRED_IN_BLOCK_COUNT,*/
+                MixItContract.Blocks.BLOCK_START,
+                MixItContract.Blocks.BLOCK_END,
+                MixItContract.Tracks.TRACK_COLOR,
+                MixItContract.Sessions.STARRED_IN_BLOCK_COUNT,*/
         };
 
         int _ID = 0;
@@ -626,14 +628,14 @@ public class SessionsActivity extends ListActivity implements NotifyingAsyncQuer
     }
 
 	/** {@link fr.mixit.android.provider.MixItContract.Sessions} search query parameters. */
-/*    private interface SearchQuery {
+    private interface SearchQuery {
     	String[] PROJECTION = {
                 BaseColumns._ID,
                 MixItContract.Sessions.SESSION_ID,
                 MixItContract.Sessions.TITLE,
                 MixItContract.Sessions.SEARCH_SNIPPET,
                 MixItContract.Sessions.STARRED,
-                Tracks.TRACK_COLOR,
+                MixItContract.Tracks.TRACK_COLOR,
         };
 
         int _ID = 0;
@@ -643,6 +645,6 @@ public class SessionsActivity extends ListActivity implements NotifyingAsyncQuer
         int STARRED = 4;
         int TRACK_COLOR = 5;
      
-    }*/
+    }
     
 }

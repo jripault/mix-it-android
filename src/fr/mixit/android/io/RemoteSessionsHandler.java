@@ -106,32 +106,6 @@ public class RemoteSessionsHandler extends JSONHandler {
 				    batch.add(builder.build());
 	            }
 
-/*			    if (session.has("track")) {
-			    	final String trackId = session.getString("track");
-			    	final Uri trackUri = MixItContract.Tracks.buildTrackUri(trackId);
-	
-				    if (!trackIds.contains(trackId)) {
-				    	trackIds.add(trackId);
-				    	
-			            ContentProviderOperation.Builder trackBuilder;
-			            if (isRowExisting(MixItContract.Tracks.buildTrackUri(trackId), TracksQuery.PROJECTION, resolver)) {
-			            	trackBuilder = ContentProviderOperation.newUpdate(trackUri);
-			            } else {
-			            	trackBuilder = ContentProviderOperation.newInsert(MixItContract.Tracks.CONTENT_URI);
-			            	trackBuilder.withValue(MixItContract.Tracks.TRACK_ID, trackId);
-			            }
-	
-		                trackBuilder.withValue(MixItContract.Tracks.TRACK_NAME, trackName);
-		                final int color = Color.parseColor(getTrackColor(trackId));
-		                trackBuilder.withValue(MixItContract.Tracks.TRACK_COLOR, color);
-		    		    batch.add(trackBuilder.build());
-				    }
-				    
-		            if (newSession || sessionUpdated) {
-					    builder.withValue(MixItContract.Sessions.TRACK_ID, trackId);
-		            }
-			    }*/
-			    
 			    if (session.has("speakers")) {
 				    final Uri speakerSessionsUri = MixItContract.Sessions.buildSpeakersDirUri(sessionId);
 			    	final JSONArray speakers = session.getJSONArray("speakers");
@@ -176,13 +150,6 @@ public class RemoteSessionsHandler extends JSONHandler {
             	}
         	}
 
-/*        	HashSet<String> lostTrackIds = getLostIds(trackIds, Tracks.CONTENT_URI, TracksQuery.PROJECTION, TracksQuery.TRACK_ID, resolver);
-        	for (String lostTrackId : lostTrackIds) {
-        		Uri deleteUri = Tracks.buildSessionsUri(lostTrackId);
-		    	batch.add(ContentProviderOperation.newDelete(deleteUri).build());
-		    	deleteUri = Tracks.buildTrackUri(lostTrackId);
-		    	batch.add(ContentProviderOperation.newDelete(deleteUri).build());
-        	}*/
         	HashSet<String> lostSessionIds = getLostIds(sessionIds, MixItContract.Sessions.CONTENT_URI, SessionsQuery.PROJECTION, SessionsQuery.SESSION_ID, resolver);
         	for (String lostSessionId : lostSessionIds) {
 		    	Uri deleteUri = MixItContract.Sessions.buildSpeakersDirUri(lostSessionId);

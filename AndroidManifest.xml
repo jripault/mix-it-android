@@ -35,6 +35,15 @@
 			</intent-filter>
 		</activity>
 
+		<activity android:name=".ui.SessionDetailActivity"
+			android:theme="@style/Theme.MixIT">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<data android:mimeType="vnd.android.cursor.item/vnd.mixit.session" />
+			</intent-filter>
+		</activity>
+
 		<activity android:name=".ui.SessionsActivity"
 			android:theme="@style/Theme.MixIT"
 			android:label="@string/title_sessions">
@@ -43,6 +52,16 @@
 				<category android:name="android.intent.category.DEFAULT" />
 				<category android:name="android.intent.category.TAB" />
 				<data android:mimeType="vnd.android.cursor.dir/vnd.mixit.session" />
+			</intent-filter>
+		</activity>
+
+		<activity android:name="fr.mixit.android.ui.SpeakerDetailActivity"
+			android:theme="@style/Theme.MixIT"
+			android:label="@string/title_speaker_detail">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<data android:mimeType="vnd.android.cursor.item/vnd.mixit.speaker" />
 			</intent-filter>
 		</activity>
 
