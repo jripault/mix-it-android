@@ -9,6 +9,7 @@
     <string name="description_refresh">Refraichir</string>
     <string name="description_share">Partager</string>
     <string name="description_star">Favoris</string>
+	<string name="description_email">E-Mail</string>
 
     <string name="btn_schedule">Agenda</string>
     <string name="btn_sessions">Sessions</string>
@@ -17,18 +18,39 @@
 
 	<string name="empty_sessions">Aucune sessions trouvée</string>
 	<string name="empty_speakers">Aucun speakers trouvé</string>
+	<string name="empty_session_detail">Pas de détail de session trouvé</string>
 
     <string name="now_playing_loading">Recherche de sessions aux alentours\u2026</string>
     <string name="now_playing_no_results">Pas sessions à proximité.</string>
     <string name="now_playing_next_up">Voir quelles sessions vont démarrer.</string>
 
+	<string name="speaker_bio">Bio</string>
+	<string name="speaker_sessions">Sessions</string>
+
 	<string name="sessions_track">Track</string>
 	<string name="sessions_all">Toutes</string>
 
-	<string name="session_subtitle">%2$s in %3$s</string>
+	<string name="session_summary">Résumé</string>
+	<string name="session_parallel">En parallèle</string>
+	<string name="session_subtitle">%1$s in %2$s</string>
+	<string name="session_speakers">Speakers</string>
+	<string name="session_type">Type</string>
 
+	<string name="starred_sessions">Sessions</string>
+	<string name="starred_speakers">Speakers</string>
+
+	<string name="title_share">Partage utilisant</string>
     <string name="title_sessions">Sessions</string>
     <string name="title_speakers">Speakers</string>
+	<string name="title_speaker_detail">Détail Speaker</string>
     <string name="title_schedule">Agenda</string>
+	<string name="title_starred">Favoris</string>
+	<string name="title_tracks">Tracks</string>
+
+	<string name="share_template">Regarde \'%1$s\' à #mixit</string>
+
+	<string name="toast_sync_error">Erreur de synchronisation : %1$s</string>
+
+	<string name="permission_write">Modifier les données de l\'agenda MixIt</string>
 
 </resources>

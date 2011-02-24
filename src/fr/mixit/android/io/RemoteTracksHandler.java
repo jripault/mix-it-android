@@ -3,6 +3,7 @@ package fr.mixit.android.io;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.util.Log;
 import fr.mixit.android.provider.MixItContract;
@@ -61,7 +62,8 @@ public class RemoteTracksHandler extends JSONHandler {
 
 		        if (newTrack || trackUpdated) {
 			        builder.withValue(MixItContract.Tracks.TRACK_NAME, track.getString("name"));
-			        builder.withValue(MixItContract.Tracks.TRACK_COLOR, track.getString("rgb"));
+			        final int color = Color.parseColor(track.getString("color"));
+			        builder.withValue(MixItContract.Tracks.TRACK_COLOR, color);
 					build = true;
 		        }
 		        if (build) batch.add(builder.build());
@@ -79,7 +81,7 @@ public class RemoteTracksHandler extends JSONHandler {
             final String curName = cursor.getString(TracksQuery.TRACK_NAME).toLowerCase().trim();
         	final String curColor = cursor.getString(TracksQuery.TRACK_COLOR).toLowerCase().trim();
         	final String newName = track.has("name") ? track.getString("name").toLowerCase().trim() : curName;
-        	final String newColor = track.has("rgb") ? track.getString("rgb").toLowerCase().trim() : curColor;
+        	final String newColor = track.has("color") ? track.getString("color").toLowerCase().trim() : curColor;
 
         	return (!curName.equals(newName)
         			|| !curColor.equals(newColor));

@@ -74,6 +74,20 @@ public class SessionsActivity extends ListActivity implements NotifyingAsyncQuer
 	// TODO change to sort by block start
     private static final String SESSIONS_SORT = MixItContract.Sessions.TITLE/*BLOCK_START*/ + " ASC";/*"," + Rooms.NAME + " ASC";*/
 
+	private Runnable mRefreshSessionsRunnable = new Runnable() {
+	    public void run() {
+	        if (mAdapter != null) {
+	            // This is used to refresh session title colors.
+	            mAdapter.notifyDataSetChanged();
+	        }
+
+	        // Check again on the next quarter hour, with some padding to account for network
+	        // time differences.
+	        long nextQuarterHour = (SystemClock.uptimeMillis() / 900000 + 1) * 900000 + 5000;
+	        mMessageQueueHandler.postAtTime(mRefreshSessionsRunnable, nextQuarterHour);
+	    }
+	};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,7 +149,7 @@ public class SessionsActivity extends ListActivity implements NotifyingAsyncQuer
 			}
 			list.setPinnedHeaderView(pinnedHeader);
 			list.setDividerHeight(0);
-//			list.setOnScrollListener((SessionsAdapter) mAdapter);
+			list.setOnScrollListener((SessionsAdapter) mAdapter);
     	}
     }
 
@@ -174,13 +188,13 @@ public class SessionsActivity extends ListActivity implements NotifyingAsyncQuer
         		currentTime < UIUtils.CONFERENCE_END_MILLIS) {
 	    	for (int i = 0; i < cursor.getCount(); i++) {
 	    		cursor.moveToPosition(i);
-/*	    		long blockStart = cursor.getLong(SessionsQuery.BLOCK_START);
-	    		long blockEnd = cursor.getLong(SessionsQuery.BLOCK_END);
+			    long blockStart = cursor.getLong(SessionsQuery.SLOT_START);
+	    		long blockEnd = cursor.getLong(SessionsQuery.SLOT_END);
 	    		if ((currentTime >= blockStart && currentTime <= blockEnd)
 	    				|| currentTime <= blockEnd) {
 	    			scrollPos = i;
 	    			break;
-	    		}*/
+	    		}
 	    	}
         }
     	
@@ -259,10 +273,10 @@ public class SessionsActivity extends ListActivity implements NotifyingAsyncQuer
     }
     
     private final class SessionsAdapter extends BaseAdapter
-	    implements /*SectionIndexer, OnScrollListener, */PinnedHeaderListView.PinnedHeaderAdapter {
+	    implements SectionIndexer, OnScrollListener, PinnedHeaderListView.PinnedHeaderAdapter {
 
-//    	private SectionIndexer mIndexer;
-    	private boolean mDisplaySectionHeaders = true;
+    	private SectionIndexer mIndexer;
+    	private boolean mDisplaySectionHeaders = false;
 	
 		private final Context mContext;
 	
@@ -306,41 +320,41 @@ public class SessionsActivity extends ListActivity implements NotifyingAsyncQuer
 		@Override
 		public void bindView(View view, Context context, Cursor cursor) {
 			SessionItemViews views = (SessionItemViews) view.getTag();
-/*	        if (mTrackColor == -1) {
+	        if (mTrackColor == -1) {
 	        	views.trackView.setBackgroundColor(cursor.getInt(SessionsQuery.TRACK_COLOR));
-	        } else {*/
+	        } else {
 	        	views.trackView.setVisibility(View.GONE);
-//	        }
+	        }
 	
 	        views.titleView.setText(cursor.getString(SessionsQuery.TITLE));
 	
 	        // Format time block this session occupies
-/*	        final long blockStart = cursor.getLong(SessionsQuery.BLOCK_START);
-	        final long blockEnd = cursor.getLong(SessionsQuery.BLOCK_END);*/
+	        final long blockStart = cursor.getLong(SessionsQuery.SLOT_START);
+	        final long blockEnd = cursor.getLong(SessionsQuery.SLOT_END);
 	        final String roomName = cursor.getString(SessionsQuery.ROOM_NAME);
-//	        final String subtitle = UIUtils.formatSessionSubtitle(blockStart, blockEnd, roomName, context);
+	        final String subtitle = UIUtils.formatSessionSubtitle(blockStart, blockEnd, roomName, context);
 	
-//	        views.subtitleView.setText(subtitle);
+	        views.subtitleView.setText(subtitle);
 	
-/*	        final boolean starred = cursor.getInt(SessionsQuery.STARRED) != 0;
+	        final boolean starred = cursor.getInt(SessionsQuery.STARRED) != 0;
 	        views.starButton.setVisibility(starred ? View.VISIBLE : View.INVISIBLE);
-	        views.starButton.setChecked(starred);*/
+	        views.starButton.setChecked(starred);
 	        
-/*	        if (mHighlightParallelStarred) {
+	        if (mHighlightParallelStarred) {
 	            final int parallelStarredCount = cursor.getInt(SessionsQuery.STARRED_IN_BLOCK_COUNT);
 	        	if (starred && parallelStarredCount > 1) {
 	            	view.setBackgroundColor(0x20ff0000);
 	        	} else {
 	            	view.setBackgroundColor(0x00000000);
 	        	}
-	        } else {*/
+	        } else {
 	        	view.setBackgroundColor(0x00000000);
-//	        }
+	        }
 	        
 	        // Possibly indicate that the session has occurred in the past.
-/*	        if (mGrayOutSessions) {
+	        if (mGrayOutSessions) {
 	        	UIUtils.setSessionTitleColor(blockStart, blockEnd, views.titleView, views.subtitleView);
-	        }*/
+	        }
 		}
 		
 		private void bindSectionHeader(View view, int position, boolean displaySectionHeaders) {
@@ -348,7 +362,7 @@ public class SessionsActivity extends ListActivity implements NotifyingAsyncQuer
 		    if (!displaySectionHeaders) {
 		    	views.headerView.setVisibility(View.GONE);
 		    	views.dividerView.setVisibility(position == 0 ? View.GONE : View.VISIBLE);
-		    }/* else {
+		    } else {
 		        final int section = getSectionForPosition(position);
 		        if (getPositionForSection(section) == position) {
 		            String title = (String) mIndexer.getSections()[section];
@@ -366,7 +380,7 @@ public class SessionsActivity extends ListActivity implements NotifyingAsyncQuer
 		        } else {
 			    	views.dividerView.setVisibility(View.VISIBLE);
 		        }
-		    }*/
+		    }
 		}
 	
 		@Override
@@ -418,21 +432,21 @@ public class SessionsActivity extends ListActivity implements NotifyingAsyncQuer
 
 		@Override
 		public void notifyDataSetInvalidated() {
-//			updateIndexer(null, null);
+			updateIndexer(null, null);
 
 			super.notifyDataSetInvalidated();
 		}
 
-/*		private void updateIndexer(String[] sections, int[] counts) {
+		private void updateIndexer(String[] sections, int[] counts) {
 			if (sections == null || counts == null) {
 				mIndexer = null;
 				return;
 			}
 			
 			mIndexer = new SessionsSectionIndexer(sections, counts);
-		}*/
+		}
 	
-/*		public Object [] getSections() {
+		public Object [] getSections() {
 		    if (mIndexer == null) {
 		        return new String[] { " " };
 		    }
@@ -454,9 +468,9 @@ public class SessionsActivity extends ListActivity implements NotifyingAsyncQuer
 		    }
 		
 		    return mIndexer.getSectionForPosition(position);
-		}*/
+		}
 
-/*		public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
+		public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
 	        int totalItemCount) {
 		    if (view instanceof PinnedHeaderListView) {
 		        ((PinnedHeaderListView) view).configureHeaderView(firstVisibleItem);
@@ -464,21 +478,21 @@ public class SessionsActivity extends ListActivity implements NotifyingAsyncQuer
 		}
 	
 		public void onScrollStateChanged(AbsListView view, int scrollState) {
-		}*/
+		}
 	
 		/**
 		 * Computes the state of the pinned header.  It can be invisible, fully
 		 * visible or partially pushed up out of the view.
 		 */
-/*		public int getPinnedHeaderState(int position) {
-			final Cursor cursor = getCursor();
+		public int getPinnedHeaderState(int position) {
+/*			final Cursor cursor = getCursor();
 		    if (mIndexer == null || cursor == null || cursor.getCount() == 0) {
 		        return PINNED_HEADER_GONE;
 		    }
 		
-		    if (position < 0) {
+		    if (position < 0) {*/
 		        return PINNED_HEADER_GONE;
-		    }
+/*		    }
 		
 		    // The header should get pushed up if the top item shown
 		    // is the last item in a section for a particular letter.
@@ -488,10 +502,7 @@ public class SessionsActivity extends ListActivity implements NotifyingAsyncQuer
 		        return PINNED_HEADER_PUSHED_UP;
 		    }
 		
-		    return PINNED_HEADER_VISIBLE;
-		}*/
-		public int getPinnedHeaderState(int position) {
-			return 0;
+		    return PINNED_HEADER_VISIBLE;*/
 		}
 
 		public void configurePinnedHeader(View header, int position, int alpha) {
@@ -588,20 +599,6 @@ public class SessionsActivity extends ListActivity implements NotifyingAsyncQuer
         }
     }
 
-    private Runnable mRefreshSessionsRunnable = new Runnable() {
-        public void run() {
-            if (mAdapter != null) {
-                // This is used to refresh session title colors.
-                mAdapter.notifyDataSetChanged();
-            }
-
-            // Check again on the next quarter hour, with some padding to account for network
-            // time differences.
-            long nextQuarterHour = (SystemClock.uptimeMillis() / 900000 + 1) * 900000 + 5000;
-            mMessageQueueHandler.postAtTime(mRefreshSessionsRunnable, nextQuarterHour);
-        }
-    };
-
     /** {@link fr.mixit.android.provider.MixItContract.Sessions} query parameters. */
     private interface SessionsQuery {
     	String[] PROJECTION = {
@@ -609,22 +606,22 @@ public class SessionsActivity extends ListActivity implements NotifyingAsyncQuer
                 MixItContract.Sessions.SESSION_ID,
                 MixItContract.Sessions.TITLE,
 			    MixItContract.Sessions.ROOM,
-/*			    MixItContract.Sessions.STARRED,
-                MixItContract.Blocks.BLOCK_START,
-                MixItContract.Blocks.BLOCK_END,
+			    MixItContract.Sessions.STARRED,
+                MixItContract.Slots.SLOT_START,
+                MixItContract.Slots.SLOT_END,
                 MixItContract.Tracks.TRACK_COLOR,
-                MixItContract.Sessions.STARRED_IN_BLOCK_COUNT,*/
+                MixItContract.Sessions.STARRED_IN_SLOT_COUNT,
         };
 
         int _ID = 0;
         int SESSION_ID = 1;
         int TITLE = 2;
 	    int ROOM_NAME = 3;
-/*        int STARRED = 4;
-        int BLOCK_START = 5;
-        int BLOCK_END = 6;
+        int STARRED = 4;
+        int SLOT_START = 5;
+        int SLOT_END = 6;
         int TRACK_COLOR = 7;
-        int STARRED_IN_BLOCK_COUNT = 8;*/
+        int STARRED_IN_BLOCK_COUNT = 8;
     }
 
 	/** {@link fr.mixit.android.provider.MixItContract.Sessions} search query parameters. */

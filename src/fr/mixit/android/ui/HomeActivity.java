@@ -105,8 +105,8 @@ public class HomeActivity extends Activity implements DetachableResultReceiver.R
 	/** Handle "starred" action. */
 	public void onStarredClick(View v) {
 		//TODO implement it
-/*	    // Launch list of sessions user has starred
-		startActivity(new Intent(this, StarredActivity.class));*/
+	    // Launch list of sessions user has starred
+		startActivity(new Intent(this, StarredActivity.class));
 	}
 
 	/** Handle "speakers" action. */

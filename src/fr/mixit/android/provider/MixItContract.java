@@ -107,7 +107,7 @@ public class MixItContract {
 	    public static final String CONTENT_ITEM_TYPE =
 	            "vnd.android.cursor.item/vnd.mixit.slot";
 
-	    /** Count of {@link Sessions} inside given block. */
+	    /** Count of {@link Sessions} inside given slot. */
 	    public static final String SESSIONS_COUNT = "sessions_count";
 
 	    /**
