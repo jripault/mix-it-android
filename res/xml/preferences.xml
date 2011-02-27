@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright 2010 Peter Kuterna
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<!-- Sync settings -->
+	<PreferenceCategory android:title="@string/settings_sync">
+		<CheckBoxPreference 
+			android:key="@string/sync_only_wifi_key"
+			android:title="@string/settings_sync_only_wifi" 
+			android:defaultValue="false" 
+			android:summaryOn="@string/settings_sync_only_wifi_summary_on" 
+			android:summaryOff="@string/settings_sync_only_wifi_summary_off" />
+			
+	</PreferenceCategory>
+
+	<!-- Notifications settings -->
+	<PreferenceCategory android:title="@string/settings_notifications">
+		<CheckBoxPreference 
+			android:key="@string/notify_new_sessions_key"
+			android:title="@string/settings_notify_new_sessions"
+			android:defaultValue="true" />
+
+		<CheckBoxPreference 
+			android:key="@string/notify_changed_starred_sessions_key"
+			android:title="@string/settings_notify_changed_starred_sessions"
+			android:defaultValue="true" />
+	</PreferenceCategory>
+
+	<!-- Visualization settings -->
+	<PreferenceCategory android:title="@string/settings_visualizations">
+		<CheckBoxPreference 
+			android:key="@string/visualize_parallel_starred_sessions_key"
+			android:title="@string/settings_visualize_parallel_starred_sessions"
+			android:summary="@string/settings_visualize_parallel_starred_sessions_summary"
+			android:defaultValue="false" />
+		<CheckBoxPreference 
+			android:key="@string/gray_out_passed_sessions_key"
+			android:title="@string/gray_out_passed_sessions"
+			android:summary="@string/gray_out_passed_sessions_summary"
+			android:defaultValue="true" />
+		<CheckBoxPreference 
+			android:key="@string/focus_session_during_conference_key"
+			android:title="@string/settings_focus_session_during_conference"
+			android:summary="@string/settings_focus_session_during_conference_summary"
+			android:defaultValue="true" />
+	</PreferenceCategory>
+</PreferenceScreen>

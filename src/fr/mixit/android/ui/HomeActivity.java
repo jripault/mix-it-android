@@ -5,12 +5,15 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 import fr.mixit.android.R;
 import fr.mixit.android.provider.MixItContract;
 import fr.mixit.android.service.SyncService;
 import fr.mixit.android.utils.DetachableResultReceiver;
+import fr.mixit.android.utils.UIUtils;
 
 /**
  * Front-door {@link Activity} that displays high-level features the schedule
@@ -67,6 +70,26 @@ public class HomeActivity extends Activity implements DetachableResultReceiver.R
 //            showNowPlayingNoResults();
         }
     }
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    super.onCreateOptionsMenu(menu);
+	    getMenuInflater().inflate(R.menu.options_menu_home, menu);
+	    return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+		    case R.id.menu_settings:
+			    UIUtils.goSettings(this);
+			    return true;
+	        case R.id.menu_about:
+	            UIUtils.goAbout(this);
+	            return true;
+	    }
+	    return false;
+	}
 
 	/** Handle "refresh" title-bar action. */
 	public void onRefreshClick(View v) {

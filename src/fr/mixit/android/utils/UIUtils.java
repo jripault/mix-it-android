@@ -22,6 +22,7 @@ package fr.mixit.android.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -39,8 +40,11 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import fr.mixit.android.R;
+import fr.mixit.android.ui.AboutActivity;
 import fr.mixit.android.ui.HomeActivity;
+import fr.mixit.android.ui.SettingsActivity;
 
+import java.util.List;
 import java.util.TimeZone;
 
 public class UIUtils {
@@ -139,6 +143,21 @@ public class UIUtils {
         activity.startSearch(null, false, Bundle.EMPTY, false);
     }
 
+	/**
+	 * Invoke "settings" action, go to {@link SettingsActivity}.
+	 */
+	public static void goSettings(Context context) {
+	    final Intent intent = new Intent(context, SettingsActivity.class);
+	    context.startActivity(intent);
+	}
+
+	/**
+	 * Invoke "about" action, go to {@link AboutActivity}.
+	 */
+	public static void goAbout(Context context) {
+	    final Intent intent = new Intent(context, AboutActivity.class);
+	    context.startActivity(intent);
+	}
 
 	/**
 	 * Format and return the given {@link fr.mixit.android.provider.MixItContract.Slots} values using
@@ -208,6 +227,40 @@ public class UIUtils {
 	    }
 
 	    return builder;
+	}
+
+	/**
+	 * Returns the version name we are currently in
+	 * @param appPackageName - full name of the package of an app, 'com.dcg.meneame' for example.
+	 */
+	public static String getAppVersionName(Context context, String appPackageName) {
+	    if (context!= null) {
+	        try {
+	            return context.getPackageManager().getPackageInfo(appPackageName, 0).versionName;
+	        } catch (PackageManager.NameNotFoundException e) {
+	        }
+	    }
+	    return null;
+	}
+
+	/**
+	 * Based upon {@linkplain http://android-developers.blogspot.com/2009/01/can-i-use-this-intent.html}
+	 *
+	 * Indicates whether the specified action can be used as an intent. This
+	 * method queries the package manager for installed packages that can
+	 * respond to an intent with the specified action. If no suitable package is
+	 * found, this method returns false.
+	 *
+	 * @param context The application's environment.
+	 * @param intent The Intent action to check for availability.
+	 *
+	 * @return True if an Intent with the specified action can be sent and
+	 *         responded to, false otherwise.
+	 */
+	public static boolean isIntentAvailable(Context context, Intent intent) {
+	    final PackageManager packageManager = context.getPackageManager();
+	    List list = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+	    return list.size() > 0;
 	}
 
 }

@@ -46,10 +46,35 @@
     <string name="title_schedule">Agenda</string>
 	<string name="title_starred">Favoris</string>
 	<string name="title_tracks">Tracks</string>
+	<string name="title_about">A Propos</string>
+
+	<string name="menu_settings">Paramètres</string>
+	<string name="menu_about">A Propos</string>
+
+	<string name="settings_sync">Synchronisation</string>
+	<string name="settings_notifications">Notifications</string>
+	<string name="settings_visualizations">Visualisations</string>
+	<string name="settings_sync_only_wifi">Seulement en WiFi</string>
+	<string name="settings_sync_only_wifi_summary_on">Activé</string>
+	<string name="settings_sync_only_wifi_summary_off">Désactivé</string>
+	<string name="settings_notify_new_sessions">Nouvelles sessions</string>
+	<string name="settings_notify_changed_starred_sessions">Changement favoris</string>
+	<string name="settings_visualize_parallel_starred_sessions">Favoris en Parallèle</string>
+	<string name="settings_visualize_parallel_starred_sessions_summary">Mettre en surbrillant les sessions en favoris qui se déroulent qu\'une autre session en faovris.</string>
+	<string name="gray_out_passed_sessions">Mettre en gris les sessions</string>
+	<string name="gray_out_passed_sessions_summary">Mettre en gris les sessions déjà déroulée.</string>
+	<string name="settings_focus_session_during_conference">Aller à la session</string>
+	<string name="settings_focus_session_during_conference_summary">Aller à la session courrante ou suivant pendant la conférence.</string>
 
 	<string name="share_template">Regarde \'%1$s\' à #mixit</string>
 
 	<string name="toast_sync_error">Erreur de synchronisation : %1$s</string>
+
+	<string name="about_text1">Basée sur l\'application Devoxx 2010 Schedule, qui a été publiée sous la licence Apache 2.0.</string>
+	<string name="about_text2">Le code source a été modifié pour la conférence MixIt par :</string>
+	<string name="about_text3">Mathieu Calba\r\nmathieu.calba@gmail.com\r\nhttp://twitter.com/Mathieu_Calba</string>
+	<string name="about_text4">Le Code source est disponible à https://github.com/jripault/mix-it-android</string>
+	<string name="about_text5">Version %s</string>
 
 	<string name="permission_write">Modifier les données de l\'agenda MixIt</string>
 
