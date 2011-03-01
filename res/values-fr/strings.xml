@@ -19,6 +19,7 @@
 	<string name="empty_sessions">Aucune sessions trouvée</string>
 	<string name="empty_speakers">Aucun speakers trouvé</string>
 	<string name="empty_session_detail">Pas de détail de session trouvé</string>
+	<string name="empty_tags">Pas de tags trouvé</string>
 
     <string name="now_playing_loading">Recherche de sessions aux alentours\u2026</string>
     <string name="now_playing_no_results">Pas sessions à proximité.</string>
@@ -28,6 +29,7 @@
 	<string name="speaker_sessions">Sessions</string>
 
 	<string name="sessions_track">Track</string>
+	<string name="sessions_tag">Tag</string>
 	<string name="sessions_all">Toutes</string>
 
 	<string name="session_summary">Résumé</string>
@@ -35,6 +37,7 @@
 	<string name="session_subtitle">%1$s in %2$s</string>
 	<string name="session_speakers">Speakers</string>
 	<string name="session_type">Type</string>
+	<string name="session_tags">Tags</string>
 
 	<string name="starred_sessions">Sessions</string>
 	<string name="starred_speakers">Speakers</string>
@@ -46,10 +49,13 @@
     <string name="title_schedule">Agenda</string>
 	<string name="title_starred">Favoris</string>
 	<string name="title_tracks">Tracks</string>
+	<string name="title_tags">Tags</string>
 	<string name="title_settings">Settings</string>
 	<string name="title_about">A Propos</string>
 	<string name="title_search">Recherche</string>
 	<string name="title_search_query">Recherche pour \'%1$s\'</string>
+	<string name="title_new_sessions">Nouvelles sessions</string>
+	<string name="title_changed_starred_sessions">Changement dans les sessions en favoris</string>
 
 	<string name="menu_settings">Paramètres</string>
 	<string name="menu_about">A Propos</string>
@@ -84,6 +90,10 @@
 	<string name="about_text3">Mathieu Calba\r\nmathieu.calba@gmail.com\r\nhttp://twitter.com/Mathieu_Calba</string>
 	<string name="about_text4">Le Code source est disponible à https://github.com/jripault/mix-it-android</string>
 	<string name="about_text5">Version %s</string>
+
+	<string name="new_session">Nouvelle(s) session(s) Mix It</string>
+	<string name="at_total"> au total.</string>
+	<string name="update_session">Changement dans les session Mix It</string>
 
 	<string name="permission_write">Modifier les données de l\'agenda MixIt</string>
 

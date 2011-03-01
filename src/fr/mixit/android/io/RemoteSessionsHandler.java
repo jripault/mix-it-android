@@ -54,8 +54,8 @@ public class RemoteSessionsHandler extends JSONHandler {
 	public ArrayList<ContentProviderOperation> parse(ArrayList<JSONArray> entries, ContentResolver resolver) throws JSONException {
 		final ArrayList<ContentProviderOperation> batch = Lists.newArrayList();
 		final HashSet<String> sessionIds = Sets.newHashSet();
-		final HashSet<String> trackIds = Sets.newHashSet();
 		final HashMap<String, HashSet<String>> sessionSpeakerIds = Maps.newHashMap();
+		final HashMap<String, HashSet<String>> sessionTagIds = Maps.newHashMap();
 
 		int nrEntries = 0;
 		for (JSONArray sessions : entries) {
@@ -135,6 +135,36 @@ public class RemoteSessionsHandler extends JSONHandler {
 			    	
 			    	sessionSpeakerIds.put(sessionId, speakerIds);
 			    }
+
+		        if (session.has("tags")) {
+			        final Uri tagSessionsUri = MixItContract.Sessions.buildTagsDirUri(sessionId);
+			        final JSONArray tags = session.getJSONArray("tags");
+				    final HashSet<String> tagIds = Sets.newHashSet();
+
+			        if (!isLocalSync()) {
+		                final boolean sessionTagsUpdated = isSessionTagsUpdated(tagSessionsUri, tags, resolver);
+				        if (sessionTagsUpdated) {
+					        Log.d(TAG, "Tags of session with sessionId " + sessionId + " was udpated.");
+					        batch.add(ContentProviderOperation.newUpdate(sessionUri).build());
+				        }
+			        }
+
+			        for (int j = 0; j < tags.length(); j++) {
+/*			    		JSONObject tag = tags.getJSONObject(j);
+
+		            	final String tagId = tag.getString("tagId");
+		            	tagIds.add(tagId);*/
+
+				        final String tagId = tags.getString(j);
+		                tagIds.add(tagId);
+
+				        batch.add(ContentProviderOperation.newInsert(tagSessionsUri)
+						        .withValue(MixItDatabase.SessionsTags.TAG_ID, tagId)
+						        .withValue(MixItDatabase.SessionsTags.SESSION_ID, sessionId).build());
+			        }
+
+			        sessionTagIds.put(sessionId, tagIds);
+		        }
 	        }
 		}
         
@@ -190,22 +220,32 @@ public class RemoteSessionsHandler extends JSONHandler {
         }
 	}
 
+	private static boolean isSessionTagsUpdated(Uri uri, JSONArray tags, ContentResolver resolver) throws JSONException {
+        final Cursor cursor = resolver.query(uri, TagsQuery.PROJECTION, null, null, null);
+        try {
+            if (!cursor.moveToFirst()) return false;
+            return cursor.getCount() != tags.length();
+        } finally {
+            cursor.close();
+        }
+	}
+
     private interface SessionsQuery {
         String[] PROJECTION = {
         		MixItContract.Sessions.SESSION_ID,
         		MixItContract.Sessions.TITLE,
         		MixItContract.Sessions.SUMMARY,
 		        MixItContract.Sessions.TRACK_ID,
-/*        		MixItContract.Sessions.ROOM,
-                MixItContract.Sessions.STARRED,*/
+        		MixItContract.Sessions.ROOM,
+                MixItContract.Sessions.STARRED,
         };
 
         int SESSION_ID = 0;
         int TITLE = 1;
         int SUMMARY = 2;
         int TRACK_ID = 3;
-/*        int ROOM = 4;
-        int STARRED = 5;*/
+        int ROOM = 4;
+        int STARRED = 5;
     }
 
     interface SpeakersQuery {
@@ -216,12 +256,12 @@ public class RemoteSessionsHandler extends JSONHandler {
         int SPEAKER_ID = 0;
     }
 
-    private interface TracksQuery {
+    interface TagsQuery {
         String[] PROJECTION = {
-                MixItContract.Tracks.TRACK_ID,
+                MixItContract.Tags.TAG_ID,
         };
 
-        int TRACK_ID = 0;
+        int TAG_ID = 0;
     }
 
 }

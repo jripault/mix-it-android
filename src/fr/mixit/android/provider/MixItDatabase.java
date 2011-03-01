@@ -51,7 +51,7 @@ public class MixItDatabase extends SQLiteOpenHelper {
 		String SEARCH_SUGGEST = "search_suggest";
 
 		String SESSIONS_JOIN_SLOTS_TRACKS = "sessions "
-		    + "LEFT OUTER JOIN slots ON sessions.slot_id=slots.slot_id "
+			+ "LEFT OUTER JOIN slots ON sessions.slot_id=slots.slot_id "
 			+ "LEFT OUTER JOIN tracks ON sessions.track_id=tracks.track_id";
 
 		String SESSIONS_SPEAKERS_JOIN_SPEAKERS = "sessions_speakers "
@@ -59,22 +59,20 @@ public class MixItDatabase extends SQLiteOpenHelper {
 
 		String SESSIONS_SPEAKERS_JOIN_SESSIONS_SLOTS_TRACKS = "sessions_speakers "
 		    + "LEFT OUTER JOIN sessions ON sessions_speakers.session_id=sessions.session_id "
-		    + "LEFT OUTER JOIN slots ON sessions.slot_id=slots.slot_id "
+			+ "LEFT OUTER JOIN slots ON sessions.slot_id=slots.slot_id "
 			+ "LEFT OUTER JOIN tracks ON sessions.track_id=tracks.track_id";
 
 		String SESSIONS_TAGS_JOIN_TAGS = "sessions_tags "
 		    + "LEFT OUTER JOIN tags ON sessions_tags.tag_id=tags.tag_id";
 
-		String SESSIONS_TAGS_JOIN_SESSIONS_SLOTS_ROOMS_TRACKS = "sessions_tags "
+		String SESSIONS_TAGS_JOIN_SESSIONS_SLOTS_TRACKS = "sessions_tags "
 		    + "LEFT OUTER JOIN sessions ON sessions_tags.session_id=sessions.session_id "
-		    + "LEFT OUTER JOIN blocks ON sessions.block_id=blocks.block_id "
-		    + "LEFT OUTER JOIN rooms ON sessions.room_id=rooms.room_id "
+		    + "LEFT OUTER JOIN slots ON sessions.slot_id=slots.slot_id "
 			+ "LEFT OUTER JOIN tracks ON sessions.track_id=tracks.track_id";
 
 		String SESSIONS_SEARCH_JOIN_SESSIONS_SLOTS_TRACKS = "sessions_search "
 		    + "LEFT OUTER JOIN sessions ON sessions_search.session_id=sessions.session_id "
 		    + "LEFT OUTER JOIN slots ON sessions.slot_id=slots.slot_id "
-		    + "LEFT OUTER JOIN rooms ON sessions.room_id=rooms.room_id "
 			+ "LEFT OUTER JOIN tracks ON sessions.track_id=tracks.track_id";
 
 		String SPEAKERS_SEARCH_JOIN_SPEAKERS = "speakers_search "
@@ -172,6 +170,8 @@ public class MixItDatabase extends SQLiteOpenHelper {
 		        + SessionsColumns.TITLE + " TEXT,"
 		        + SessionsColumns.SUMMARY + " TEXT,"
 		        + SessionsColumns.STARRED + " INTEGER NOT NULL DEFAULT 0,"
+				+ SessionsColumns.NEW + " INTEGER NOT NULL DEFAULT 0,"
+				+ SessionsColumns.UPDATED + " INTEGER NOT NULL DEFAULT 0,"
 		        + "UNIQUE (" + SessionsColumns.SESSION_ID + ") ON CONFLICT REPLACE)");
 
 		db.execSQL("CREATE TABLE " + Tables.SPEAKERS + " ("
@@ -180,7 +180,10 @@ public class MixItDatabase extends SQLiteOpenHelper {
 		        + SpeakersColumns.FIRST_NAME + " TEXT,"
 		        + SpeakersColumns.LAST_NAME + " TEXT,"
 		        + SpeakersColumns.BIO + " TEXT,"
-		        + SpeakersColumns.COMPANY + " TEXT,"
+				+ SpeakersColumns.COMPANY + " TEXT,"
+				+ SpeakersColumns.LINKEDIN + " TEXT,"
+				+ SpeakersColumns.TWITTER + " TEXT,"
+				+ SpeakersColumns.BLOG + " TEXT,"
 		        + SpeakersColumns.IMAGE_URL + " TEXT,"
 		        + "UNIQUE (" + SpeakersColumns.SPEAKER_ID + ") ON CONFLICT REPLACE)");
 

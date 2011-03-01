@@ -53,6 +53,10 @@ public class MixItContract {
 		String ROOM = "room";
 	    /** User-specific flag indicating starred status. */
 		String STARRED = "starred";
+		/** Field to mark if this session was updated. */
+		String UPDATED = "updated";
+		/** Field to mark if this session was new. */
+		String NEW = "new";
 	}
 
 	interface SpeakersColumns {
@@ -65,6 +69,12 @@ public class MixItContract {
 		String LAST_NAME = "last_name";
 		/** Company this speaker works for. */
 		String COMPANY = "company";
+		/** linkedin of this speaker. */
+		String LINKEDIN = "linkedin";
+		/** twitter of this speaker. */
+		String TWITTER = "twitter";
+		/** blog of this speaker. */
+		String BLOG = "blog";
 		/** Body of text describing this speaker in detail. */
 		String BIO = "bio";
 		/** URL towards image of speaker. */
@@ -91,7 +101,10 @@ public class MixItContract {
     private static final String PATH_TRACKS = "tracks";
 	private static final String PATH_TAGS = "tags";
 
+    private static final String PATH_WITH_NAME = "name";
 	private static final String PATH_STARRED = "starred";
+	private static final String PATH_NEW = "new";
+	private static final String PATH_UPDATED = "updated";
 	private static final String PATH_AT = "at";
 	private static final String PATH_BETWEEN = "between";
 	private static final String PATH_PARALLEL = "parallel";
@@ -266,6 +279,13 @@ public class MixItContract {
 	            BASE_CONTENT_URI.buildUpon().appendPath(PATH_SESSIONS).build();
 		public static final Uri CONTENT_STARRED_URI =
 		    CONTENT_URI.buildUpon().appendPath(PATH_STARRED).build();
+		public static final Uri CONTENT_NEW_URI =
+		    CONTENT_URI.buildUpon().appendPath(PATH_NEW).build();
+		public static final Uri CONTENT_UPDATED_URI =
+		    CONTENT_URI.buildUpon().appendPath(PATH_UPDATED).build();
+		public static final Uri CONTENT_UPDATED_STARRED_URI =
+			CONTENT_UPDATED_URI.buildUpon().appendPath(PATH_STARRED).build();
+
 
 	    public static final String CONTENT_TYPE =
 	            "vnd.android.cursor.dir/vnd.mixit.session";
@@ -274,6 +294,7 @@ public class MixItContract {
 
 		public static final String SLOT_ID = "slot_id";
 	    public static final String TRACK_ID = "track_id";
+	    public static final String TAG_ID = "tag_id";
 
 		public static final String STARRED_IN_SLOT_COUNT = "starred_in_slot_count";
 
@@ -307,6 +328,11 @@ public class MixItContract {
 	    public static Uri buildSessionSpeakerUri(String sessionId, String speakerId) {
 	        return CONTENT_URI.buildUpon().appendPath(sessionId).appendPath(PATH_SPEAKERS).appendPath(speakerId).build();
 	    }
+
+		/** Build {@link Uri} for requested {@link #SESSION_ID} for given {@link Tags} with given {@link #TAG_ID} */
+		public static Uri buildSessionTagUri(String sessionId, String tagId) {
+		    return CONTENT_URI.buildUpon().appendPath(sessionId).appendPath(PATH_TAGS).appendPath(tagId).build();
+		}
 
 	    public static Uri buildSessionsAtDirUri(long time) {
 	        return CONTENT_URI.buildUpon().appendPath(PATH_AT).appendPath(String.valueOf(time))
@@ -378,14 +404,10 @@ public class MixItContract {
 
 		public static final String SEARCH_SNIPPET = "search_snippet";
 
-		/**
-		 * Default "ORDER BY" clause.
-		 */
+		/** Default "ORDER BY" clause. */
 		public static final String DEFAULT_SORT = "UPPER(" + SpeakersColumns.LAST_NAME + ") ASC, " + SpeakersColumns.FIRST_NAME + " ASC";
 
-		/**
-		 * Build {@link Uri} for requested {@link #SPEAKER_ID}.
-		 */
+		/** Build {@link Uri} for requested {@link #SPEAKER_ID}. */
 		public static Uri buildSpeakerUri(String speakerId) {
 			return CONTENT_URI.buildUpon().appendPath(speakerId).build();
 		}

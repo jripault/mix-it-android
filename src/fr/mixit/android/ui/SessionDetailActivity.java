@@ -57,7 +57,7 @@ public class SessionDetailActivity extends TabActivity implements NotifyingAsync
      * {@link Activity} can send this extra specifying a {@link fr.mixit.android.provider.MixItContract.Tracks}
      * {@link Uri} that should be used for coloring the title-bar.
      */
-    public static final String EXTRA_TRACK = "net.peterkuterna.android.apps.devoxxsched.extra.TRACK";
+    public static final String EXTRA_TRACK = "fr.mixit.android.extra.TRACK";
 
     private static final String TAG_SUMMARY = "summary";
     private static final String TAG_NOTES = "notes";
@@ -347,15 +347,11 @@ public class SessionDetailActivity extends TabActivity implements NotifyingAsync
         		MixItContract.Speakers.SPEAKER_ID,
                 MixItContract.Speakers.FIRST_NAME,
                 MixItContract.Speakers.LAST_NAME,
-                MixItContract.Speakers.COMPANY,
-                MixItContract.Speakers.BIO,
         };
 
         int SPEAKER_ID = 0;
         int SPEAKER_FIRST_NAME = 1;
         int SPEAKER_LAST_NAME = 2;
-        int SPEAKER_COMPANY = 3;
-        int SPEAKER_BIO = 4;
     }
 
 }

@@ -32,6 +32,7 @@ public class SessionsOverviewActivity extends TabActivity {
 	private static final String TAG = "SessionsOverviewActivity";
 
     public static final String TAG_TRACK = "track";
+	public static final String TAG_TAG = "tag";
     public static final String TAG_ALL = "all";
     
     @Override
@@ -42,6 +43,7 @@ public class SessionsOverviewActivity extends TabActivity {
         ((TextView) findViewById(R.id.title_text)).setText(getTitle());
         
         setupTrackTab();
+	    setupTagTab();
         setupAllTab();
     }
 
@@ -64,6 +66,18 @@ public class SessionsOverviewActivity extends TabActivity {
                 .setIndicator(buildIndicator(R.string.sessions_track))
                 .setContent(intent));
     }
+
+	/** Build and add "tags" tab. */
+	private void setupTagTab() {
+	    final TabHost host = getTabHost();
+
+	    final Intent intent = new Intent(Intent.ACTION_VIEW, MixItContract.Tags.CONTENT_URI);
+	    intent.addCategory(Intent.CATEGORY_TAB);
+
+	    host.addTab(host.newTabSpec(TAG_TAG)
+	            .setIndicator(buildIndicator(R.string.sessions_tag))
+	            .setContent(intent));
+	}
 
     /** Build and add "all" tab. */
     private void setupAllTab() {

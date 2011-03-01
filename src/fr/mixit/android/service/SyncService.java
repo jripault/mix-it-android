@@ -12,11 +12,9 @@ import android.os.ResultReceiver;
 import android.util.Log;
 import fr.mixit.android.Constants;
 import fr.mixit.android.R;
-import fr.mixit.android.io.RemoteSessionsHandler;
-import fr.mixit.android.io.RemoteSlotsHandler;
-import fr.mixit.android.io.RemoteSpeakersHandler;
-import fr.mixit.android.io.RemoteTracksHandler;
+import fr.mixit.android.io.*;
 import fr.mixit.android.model.RequestHash;
+import fr.mixit.android.utils.NotificationUtils;
 import fr.mixit.android.utils.SyncUtils;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -42,6 +40,7 @@ public class SyncService extends IntentService {
 			Constants.SPEAKERS_URL,
 			Constants.SLOTS_URL,
 			Constants.TRACKS_URL,
+			Constants.TAGS_URL,
 	};
 
 	private static final int VERSION_NONE = 0;
@@ -108,6 +107,9 @@ public class SyncService extends IntentService {
 	            RequestHash result = mRemoteExecutor.executeGet(Constants.TRACKS_URL, new RemoteTracksHandler());
 				SyncUtils.updateLocalMd5(mResolver, result.getUrl(), result.getMd5());
 
+	            result = mRemoteExecutor.executeGet(Constants.TAGS_URL, new RemoteTagsHandler());
+	            SyncUtils.updateLocalMd5(mResolver, result.getUrl(), result.getMd5());
+
 	            result = mRemoteExecutor.executeGet(Constants.SLOTS_URL, new RemoteSlotsHandler());
 	            SyncUtils.updateLocalMd5(mResolver, result.getUrl(), result.getMd5());
 
@@ -124,11 +126,11 @@ public class SyncService extends IntentService {
             }
             Log.d(TAG, "remote sync took " + (System.currentTimeMillis() - startRemote) + "ms");
 
-/*            if (!localParse && performRemoteSync) {
+            if (!localParse && performRemoteSync) {
             	NotificationUtils.cancelNotifications(context);
             	NotificationUtils.notifyNewSessions(context, getContentResolver());
             	NotificationUtils.notifyChangedStarredSessions(context, getContentResolver());
-            }*/
+            }
         } catch (Exception e) {
             Log.e(TAG, "Problem while syncing", e);
 

@@ -26,6 +26,9 @@ public class MixItProvider extends ContentProvider {
 
 	private static final int SESSIONS = 100;
 	private static final int SESSIONS_STARRED = 101;
+	private static final int SESSIONS_NEW = 102;
+	private static final int SESSIONS_UPDATED = 103;
+	private static final int SESSIONS_UPDATED_STARRED = 104;
 	private static final int SESSIONS_SEARCH = 105;
 	private static final int SESSIONS_AT = 106;
 	private static final int SESSIONS_PARALLEL = 107;
@@ -33,6 +36,8 @@ public class MixItProvider extends ContentProvider {
 	private static final int SESSIONS_ID = 109;
 	private static final int SESSIONS_ID_SPEAKERS = 110;
 	private static final int SESSIONS_ID_SPEAKERS_ID = 111;
+	private static final int SESSIONS_ID_TAGS = 112;
+	private static final int SESSIONS_ID_TAGS_ID = 113;
 
 	private static final int SPEAKERS = 200;
 	private static final int SPEAKERS_STARRED = 201;
@@ -40,23 +45,23 @@ public class MixItProvider extends ContentProvider {
 	private static final int SPEAKERS_ID = 203;
 	private static final int SPEAKERS_ID_SESSIONS = 204;
 
-	private static final int SLOTS = 400;
-	private static final int SLOTS_BETWEEN = 401;
-	private static final int SLOTS_ID = 402;
-	private static final int SLOTS_ID_SESSIONS = 403;
+	private static final int SLOTS = 300;
+	private static final int SLOTS_BETWEEN = 301;
+	private static final int SLOTS_ID = 302;
+	private static final int SLOTS_ID_SESSIONS = 303;
 
-	private static final int TRACKS = 600;
-	private static final int TRACKS_ID = 601;
-	private static final int TRACKS_ID_SESSIONS = 602;
+	private static final int TRACKS = 400;
+	private static final int TRACKS_ID = 401;
+	private static final int TRACKS_ID_SESSIONS = 402;
 
-	private static final int SYNC = 700;
-	private static final int SYNC_ID = 701;
+	private static final int SYNC = 500;
+	private static final int SYNC_ID = 501;
 
-	private static final int TAGS = 800;
-	private static final int TAGS_ID = 801;
-	private static final int TAGS_ID_SESSIONS = 802;
+	private static final int SEARCH_SUGGEST = 600;
 
-	private static final int SEARCH_SUGGEST = 900;
+	private static final int TAGS = 700;
+	private static final int TAGS_ID = 701;
+	private static final int TAGS_ID_SESSIONS = 702;
 
 	private MixItDatabase mOpenHelper;
 
@@ -81,6 +86,9 @@ public class MixItProvider extends ContentProvider {
 
 		matcher.addURI(authority, "sessions", SESSIONS);
 		matcher.addURI(authority, "sessions/starred", SESSIONS_STARRED);
+		matcher.addURI(authority, "sessions/new", SESSIONS_NEW);
+		matcher.addURI(authority, "sessions/updated", SESSIONS_UPDATED);
+		matcher.addURI(authority, "sessions/updated/starred", SESSIONS_UPDATED_STARRED);
 		matcher.addURI(authority, "sessions/search/*", SESSIONS_SEARCH);
 		matcher.addURI(authority, "sessions/at/*", SESSIONS_AT);
 		matcher.addURI(authority, "sessions/parallel/*", SESSIONS_PARALLEL);
@@ -88,6 +96,8 @@ public class MixItProvider extends ContentProvider {
 		matcher.addURI(authority, "sessions/*", SESSIONS_ID);
 		matcher.addURI(authority, "sessions/*/speakers", SESSIONS_ID_SPEAKERS);
 		matcher.addURI(authority, "sessions/*/speakers/*", SESSIONS_ID_SPEAKERS_ID);
+		matcher.addURI(authority, "sessions/*/tags", SESSIONS_ID_TAGS);
+		matcher.addURI(authority, "sessions/*/tags/*", SESSIONS_ID_TAGS_ID);
 
 		matcher.addURI(authority, "speakers", SPEAKERS);
 		matcher.addURI(authority, "speakers/starred", SPEAKERS_STARRED);
@@ -125,6 +135,12 @@ public class MixItProvider extends ContentProvider {
 		        return MixItContract.Sessions.CONTENT_TYPE;
 		    case SESSIONS_STARRED:
 		        return MixItContract.Sessions.CONTENT_TYPE;
+		    case SESSIONS_NEW:
+		        return MixItContract.Sessions.CONTENT_TYPE;
+		    case SESSIONS_UPDATED:
+		        return MixItContract.Sessions.CONTENT_TYPE;
+		    case SESSIONS_UPDATED_STARRED:
+		        return MixItContract.Sessions.CONTENT_TYPE;
 		    case SESSIONS_SEARCH:
 		        return MixItContract.Sessions.CONTENT_TYPE;
 		    case SESSIONS_AT:
@@ -137,6 +153,8 @@ public class MixItProvider extends ContentProvider {
 		        return MixItContract.Sessions.CONTENT_ITEM_TYPE;
 		    case SESSIONS_ID_SPEAKERS:
 		        return MixItContract.Speakers.CONTENT_TYPE;
+		    case SESSIONS_ID_TAGS:
+		        return MixItContract.Tags.CONTENT_TYPE;
 		    case SPEAKERS:
 		        return MixItContract.Speakers.CONTENT_TYPE;
 		    case SPEAKERS_STARRED:
@@ -223,6 +241,10 @@ public class MixItProvider extends ContentProvider {
 		    case SESSIONS_ID_SPEAKERS: {
 		        db.insertOrThrow(MixItDatabase.Tables.SESSIONS_SPEAKERS, null, values);
 		        return MixItContract.Speakers.buildSpeakerUri(values.getAsString(MixItDatabase.SessionsSpeakers.SPEAKER_ID));
+		    }
+		    case SESSIONS_ID_TAGS: {
+		        db.insertOrThrow(MixItDatabase.Tables.SESSIONS_TAGS, null, values);
+		        return MixItContract.Tags.buildTagUri(values.getAsString(MixItDatabase.SessionsTags.TAG_ID));
 		    }
 	        case SPEAKERS: {
 	            db.insertOrThrow(MixItDatabase.Tables.SPEAKERS, null, values);
@@ -315,6 +337,19 @@ public class MixItProvider extends ContentProvider {
 		    case SESSIONS: {
 		        return builder.table(MixItDatabase.Tables.SESSIONS);
 		    }
+		    case SESSIONS_NEW: {
+		        return builder.table(MixItDatabase.Tables.SESSIONS)
+		        .where(MixItContract.Sessions.NEW + "=1");
+		    }
+		    case SESSIONS_UPDATED: {
+		        return builder.table(MixItDatabase.Tables.SESSIONS)
+		        .where(MixItContract.Sessions.UPDATED + "=1");
+		    }
+		    case SESSIONS_UPDATED_STARRED: {
+		        return builder.table(MixItDatabase.Tables.SESSIONS)
+		        .where(MixItContract.Sessions.UPDATED + "=1")
+		        .where(MixItContract.Sessions.STARRED + "=1");
+		    }
 		    case SESSIONS_STARRED: {
 		        return builder.table(MixItDatabase.Tables.SESSIONS)
 		        .where(MixItContract.Sessions.STARRED + "=1");
@@ -335,6 +370,18 @@ public class MixItProvider extends ContentProvider {
 		        return builder.table(MixItDatabase.Tables.SESSIONS_SPEAKERS)
 		                .where(MixItDatabase.SessionsSpeakers.SESSION_ID + "=?", sessionId)
 		                .where(MixItDatabase.SessionsSpeakers.SPEAKER_ID + "=?", speakerId);
+		    }
+		    case SESSIONS_ID_TAGS: {
+		        final String sessionId = MixItContract.Sessions.getSessionId(uri);
+		        return builder.table(MixItDatabase.Tables.SESSIONS_TAGS)
+		                .where(MixItDatabase.SessionsTags.SESSION_ID + "=?", sessionId);
+		    }
+		    case SESSIONS_ID_TAGS_ID: {
+		        final String sessionId = MixItContract.Sessions.getSessionId(uri);
+		        final String tagId = MixItContract.Sessions.getTagId(uri);
+		        return builder.table(MixItDatabase.Tables.SESSIONS_TAGS)
+		                .where(MixItDatabase.SessionsTags.SESSION_ID + "=?", sessionId)
+		                .where(MixItDatabase.SessionsTags.TAG_ID + "=?", tagId);
 		    }
 
 	        case SPEAKERS: {
@@ -428,6 +475,34 @@ public class MixItProvider extends ContentProvider {
                 		.mapToTable(MixItContract.Tracks.TRACK_COLOR, MixItDatabase.Tables.TRACKS)
                         .where(MixItContract.Sessions.STARRED + "=1");
             }
+		    case SESSIONS_NEW: {
+		        return builder.table(MixItDatabase.Tables.SESSIONS_JOIN_SLOTS_TRACKS)
+		                .mapToTable(MixItContract.Sessions._ID, MixItDatabase.Tables.SESSIONS)
+		                .mapToTable(MixItContract.Sessions.SLOT_ID, MixItDatabase.Tables.SESSIONS)
+				        .mapToTable(MixItContract.Sessions.TRACK_ID, MixItDatabase.Tables.SESSIONS)
+		                .map(MixItContract.Sessions.STARRED_IN_SLOT_COUNT, Subquery.SLOT_STARRED_SESSIONS_COUNT)
+				        .mapToTable(MixItContract.Tracks.TRACK_COLOR, MixItDatabase.Tables.TRACKS)
+		                .where(MixItContract.Sessions.NEW + "=1");
+		    }
+		    case SESSIONS_UPDATED: {
+		        return builder.table(MixItDatabase.Tables.SESSIONS_JOIN_SLOTS_TRACKS)
+		                .mapToTable(MixItContract.Sessions._ID, MixItDatabase.Tables.SESSIONS)
+		                .mapToTable(MixItContract.Sessions.SLOT_ID, MixItDatabase.Tables.SESSIONS)
+				        .mapToTable(MixItContract.Sessions.TRACK_ID, MixItDatabase.Tables.SESSIONS)
+		                .map(MixItContract.Sessions.STARRED_IN_SLOT_COUNT, Subquery.SLOT_STARRED_SESSIONS_COUNT)
+				        .mapToTable(MixItContract.Tracks.TRACK_COLOR, MixItDatabase.Tables.TRACKS)
+		                .where(MixItContract.Sessions.UPDATED + "=1");
+		    }
+		    case SESSIONS_UPDATED_STARRED: {
+		        return builder.table(MixItDatabase.Tables.SESSIONS_JOIN_SLOTS_TRACKS)
+		                .mapToTable(MixItContract.Sessions._ID, MixItDatabase.Tables.SESSIONS)
+		                .mapToTable(MixItContract.Sessions.SLOT_ID, MixItDatabase.Tables.SESSIONS)
+				        .mapToTable(MixItContract.Sessions.TRACK_ID, MixItDatabase.Tables.SESSIONS)
+		                .map(MixItContract.Sessions.STARRED_IN_SLOT_COUNT, Subquery.SLOT_STARRED_SESSIONS_COUNT)
+				        .mapToTable(MixItContract.Tracks.TRACK_COLOR, MixItDatabase.Tables.TRACKS)
+		                .where(MixItContract.Sessions.UPDATED + "=1")
+		                .where(MixItContract.Sessions.STARRED + "=1");
+		    }
             case SESSIONS_SEARCH: {
                 final String query = MixItContract.Sessions.getSearchQuery(uri);
                 return builder.table(MixItDatabase.Tables.SESSIONS_SEARCH_JOIN_SESSIONS_SLOTS_TRACKS)
@@ -492,6 +567,13 @@ public class MixItProvider extends ContentProvider {
                         .mapToTable(MixItContract.Speakers.SPEAKER_ID, MixItDatabase.Tables.SPEAKERS)
                         .where(Qualified.SESSIONS_SPEAKERS_SESSION_ID + "=?", sessionId);
             }
+		    case SESSIONS_ID_TAGS: {
+		        final String sessionId = MixItContract.Sessions.getSessionId(uri);
+		        return builder.table(MixItDatabase.Tables.SESSIONS_TAGS_JOIN_TAGS)
+		                .mapToTable(MixItContract.Tags._ID, MixItDatabase.Tables.TAGS)
+		                .mapToTable(MixItContract.Tags.TAG_ID, MixItDatabase.Tables.TAGS)
+		                .where(Qualified.SESSIONS_TAGS_SESSION_ID + "=?", sessionId);
+		    }
             case SPEAKERS: {
                 return builder.table(MixItDatabase.Tables.SPEAKERS)
                    		.map(MixItContract.Speakers.CONTAINS_STARRED, Subquery.SPEAKER_CONTAINS_STARRED);
@@ -543,8 +625,8 @@ public class MixItProvider extends ContentProvider {
             case SLOTS_ID: {
                 final String blockId = MixItContract.Slots.getSlotId(uri);
                 return builder.table(MixItDatabase.Tables.SLOTS)
-/*                        .map(MixItContract.Slots.SESSIONS_COUNT, Subquery.SLOT_SESSIONS_COUNT)
-                        .map(MixItContract.Slots.CONTAINS_STARRED, Subquery.SLOT_CONTAINS_STARRED)*/
+                        .map(MixItContract.Slots.SESSIONS_COUNT, Subquery.SLOT_SESSIONS_COUNT)
+                        .map(MixItContract.Slots.CONTAINS_STARRED, Subquery.SLOT_CONTAINS_STARRED)
                         .where(MixItContract.Slots.SLOT_ID + "=?", blockId);
             }
             case SLOTS_ID_SESSIONS: {
@@ -599,11 +681,10 @@ public class MixItProvider extends ContentProvider {
 		    }
 		    case TAGS_ID_SESSIONS: {
 		        final String tagId = MixItContract.Tags.getTagId(uri);
-		        return builder.table(MixItDatabase.Tables.SESSIONS_TAGS_JOIN_SESSIONS_SLOTS_ROOMS_TRACKS)
+		        return builder.table(MixItDatabase.Tables.SESSIONS_TAGS_JOIN_SESSIONS_SLOTS_TRACKS)
 		                .mapToTable(MixItContract.Sessions._ID, MixItDatabase.Tables.SESSIONS)
 		                .mapToTable(MixItContract.Sessions.SESSION_ID, MixItDatabase.Tables.SESSIONS)
 		                .mapToTable(MixItContract.Sessions.SLOT_ID, MixItDatabase.Tables.SESSIONS)
-		                .mapToTable(MixItContract.Sessions.ROOM, MixItDatabase.Tables.SESSIONS)
 		                .mapToTable(MixItContract.Sessions.TRACK_ID, MixItDatabase.Tables.SESSIONS)
 		                .map(MixItContract.Sessions.STARRED_IN_SLOT_COUNT, Subquery.SLOT_STARRED_SESSIONS_COUNT)
 		                .mapToTable(MixItContract.Tracks.TRACK_COLOR, MixItDatabase.Tables.TRACKS)
@@ -713,8 +794,8 @@ public class MixItProvider extends ContentProvider {
 			    + Qualified.SPEAKERS_SPEAKER_ID + ")";
 
 		String TAG_SESSIONS_COUNT = "(SELECT COUNT(" + Qualified.SESSIONS_TAGS_TAG_ID
-		+ ") FROM " + MixItDatabase.Tables.SESSIONS_TAGS + " WHERE "
-		+ Qualified.SESSIONS_TAGS_TAG_ID + "=" + Qualified.TAGS_TAG_ID + ")";
+				+ ") FROM " + MixItDatabase.Tables.SESSIONS_TAGS + " WHERE "
+				+ Qualified.SESSIONS_TAGS_TAG_ID + "=" + Qualified.TAGS_TAG_ID + ")";
 
 	    String TRACK_SESSIONS_COUNT = "(SELECT COUNT(" + Qualified.SESSIONS_TRACK_ID
 	            + ") FROM " + MixItDatabase.Tables.SESSIONS + " WHERE "

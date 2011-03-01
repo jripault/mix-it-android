@@ -35,6 +35,17 @@
 			</intent-filter>
 		</activity>
 
+		<activity android:name=".ui.TagsActivity"
+			android:theme="@style/Theme.MixITIndexer"
+			android:label="@string/title_tags">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.TAB" />
+				<data android:mimeType="vnd.android.cursor.dir/vnd.mixit.tag" />
+			</intent-filter>
+		</activity>
+
 		<activity android:name=".ui.SessionsActivity"
 			android:theme="@style/Theme.MixIT"
 			android:label="@string/title_sessions">
