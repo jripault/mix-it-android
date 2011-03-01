@@ -12,6 +12,7 @@ public class Constants {
 	public static final String SPEAKERS_URL = REST_BASE_URL + "speakers/json";
 	public static final String TRACKS_URL =  REST_BASE_URL + "tracks/json";
 	public static final String SLOTS_URL =  REST_BASE_URL + "slots/json";
+	public static final String TAGS_URL =  REST_BASE_URL + "tags/json";
 /* 	public static final String ROOMS_URL = REST_BASE_URL + "events/1/schedule/rooms";
 	public static final String SCHEDULE_URL = REST_BASE_URL + "events/1/schedule";
 	public static final String MYSCHEDULE_ACTIVATE_URL = REST_BASE_URL + "events/users/activate";

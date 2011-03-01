@@ -80,6 +80,18 @@
 			android:theme="@style/Theme.MixITIndexer"
 			android:label="@string/title_starred" />
 
+		<activity android:name=".ui.SearchActivity"
+			android:theme="@style/Theme.MixIT"
+			android:label="@string/title_search"
+			android:launchMode="singleTop">
+			<intent-filter>
+				<action android:name="android.intent.action.SEARCH" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+			<meta-data android:name="android.app.searchable"
+				android:resource="@xml/searchable" />
+		</activity>
+
 		<activity android:name=".ui.SettingsActivity"
 			android:theme="@style/Theme.MixItSettings"
 			android:label="@string/title_settings" />
@@ -87,6 +99,9 @@
 		<activity android:name=".ui.AboutActivity"
 			android:theme="@style/Theme.MixIT"
 			android:label="@string/title_about" />
+
+		<meta-data android:name="android.app.default_searchable"
+			android:value=".ui.SearchActivity" />
 
 	    <service android:name=".service.SyncService"/>
 

@@ -46,7 +46,10 @@
     <string name="title_schedule">Agenda</string>
 	<string name="title_starred">Favoris</string>
 	<string name="title_tracks">Tracks</string>
+	<string name="title_settings">Settings</string>
 	<string name="title_about">A Propos</string>
+	<string name="title_search">Recherche</string>
+	<string name="title_search_query">Recherche pour \'%1$s\'</string>
 
 	<string name="menu_settings">Paramètres</string>
 	<string name="menu_about">A Propos</string>
@@ -69,6 +72,12 @@
 	<string name="share_template">Regarde \'%1$s\' à #mixit</string>
 
 	<string name="toast_sync_error">Erreur de synchronisation : %1$s</string>
+
+	<string name="search_sessions">Sessions</string>
+	<string name="search_speakers">Speakers</string>
+
+	<string name="search_label">MixIt</string>
+	<string name="search_hint">Recherche par mot clé</string>
 
 	<string name="about_text1">Basée sur l\'application Devoxx 2010 Schedule, qui a été publiée sous la licence Apache 2.0.</string>
 	<string name="about_text2">Le code source a été modifié pour la conférence MixIt par :</string>

@@ -73,6 +73,13 @@ public class MixItContract {
 		String STARRED = "starred";
 	}
 
+	interface TagsColumns {
+		/** Unique string identifying this tag. */
+		String TAG_ID = "tag_id";
+		/** Tag name. */
+		String TAG_NAME = "tag_name";
+	}
+
 
 	public static final String CONTENT_AUTHORITY = "fr.mixit.android";
 
@@ -82,6 +89,7 @@ public class MixItContract {
 	private static final String PATH_SPEAKERS = "speakers";
 	private static final String PATH_SLOTS = "slots";
     private static final String PATH_TRACKS = "tracks";
+	private static final String PATH_TAGS = "tags";
 
 	private static final String PATH_STARRED = "starred";
 	private static final String PATH_AT = "at";
@@ -112,7 +120,7 @@ public class MixItContract {
 
 	    /**
 	     * Flag indicating that at least one {@link Sessions#SESSION_ID} inside
-	     * this block has {@link Sessions#STARRED} set.
+	     * this slot has {@link Sessions#STARRED} set.
 	     */
 	    public static final String CONTAINS_STARRED = "contains_starred";
 
@@ -205,7 +213,52 @@ public class MixItContract {
 	}
 
 	/**
-	 * Each session is a block of time that has a {@link Tracks},
+	 * Tags.
+	 */
+	public static class Tags implements TagsColumns, BaseColumns {
+	    public static final Uri CONTENT_URI =
+	            BASE_CONTENT_URI.buildUpon().appendPath(PATH_TAGS).build();
+
+	    public static final String CONTENT_TYPE =
+	            "vnd.android.cursor.dir/vnd.mixit.tag";
+	    public static final String CONTENT_ITEM_TYPE =
+	            "vnd.android.cursor.item/vnd.mixit.tag";
+
+	    /** Count of {@link Sessions} inside given tag. */
+	    public static final String SESSIONS_COUNT = "sessions_count";
+
+	    /** Default "ORDER BY" clause. */
+	    public static final String DEFAULT_SORT = TagsColumns.TAG_NAME + " ASC";
+
+	    /** Build {@link Uri} for requested {@link #TAG_ID}. */
+	    public static Uri buildTagUri(String tagId) {
+	        return CONTENT_URI.buildUpon().appendPath(tagId).build();
+	    }
+
+	    /**
+	     * Build {@link Uri} that references any {@link Sessions} associated
+	     * with the requested {@link #TAG_ID}.
+	     */
+	    public static Uri buildSessionsDirUri(String tagId) {
+	        return CONTENT_URI.buildUpon().appendPath(tagId).appendPath(PATH_SESSIONS).build();
+	    }
+
+	    /** Read {@link #TAG_ID} from {@link Tags} {@link Uri}. */
+	    public static String getTagId(Uri uri) {
+	        return uri.getPathSegments().get(1);
+	    }
+
+	    /**
+	     * Generate a {@link #TAG_ID} that will always match the requested
+	     * {@link Tags} details.
+	     */
+	    public static String generateTagId(String tagName) {
+	        return ParserUtils.sanitizeId(tagName);
+	    }
+	}
+
+	/**
+	 * Each session is a slot of time that has a {@link Tracks},
 	 * and zero or more {@link Speakers}.
 	 */
 	public static class Sessions implements SessionsColumns, SlotsColumns, BaseColumns {
@@ -241,6 +294,14 @@ public class MixItContract {
 	    public static Uri buildSpeakersDirUri(String sessionId) {
 	        return CONTENT_URI.buildUpon().appendPath(sessionId).appendPath(PATH_SPEAKERS).build();
 	    }
+
+		/**
+		 * Build {@link Uri} that references any {@link Tags} associated
+		 * with the requested {@link #SESSION_ID}.
+		 */
+		public static Uri buildTagsDirUri(String sessionId) {
+		    return CONTENT_URI.buildUpon().appendPath(sessionId).appendPath(PATH_TAGS).build();
+		}
 
 	    /** Build {@link Uri} for requested {@link #SESSION_ID} for given {@link Speakers} with given {@link #SPEAKER_ID} */
 	    public static Uri buildSessionSpeakerUri(String sessionId, String speakerId) {
@@ -279,6 +340,10 @@ public class MixItContract {
 	    public static String getSpeakerId(Uri uri) {
 	        return uri.getPathSegments().get(3);
 	    }
+
+		public static String getTagId(Uri uri) {
+		    return uri.getPathSegments().get(3);
+		}
 
 		public static String getSearchQuery(Uri uri) {
 		    return uri.getPathSegments().get(2);

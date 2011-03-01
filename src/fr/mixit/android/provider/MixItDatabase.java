@@ -15,6 +15,8 @@ import fr.mixit.android.provider.MixItContract.Slots;
 import fr.mixit.android.provider.MixItContract.SlotsColumns;
 import fr.mixit.android.provider.MixItContract.Tracks;
 import fr.mixit.android.provider.MixItContract.TracksColumns;
+import fr.mixit.android.provider.MixItContract.Tags;
+import fr.mixit.android.provider.MixItContract.TagsColumns;
 import fr.mixit.android.provider.MixItContract.Sync;
 import fr.mixit.android.provider.MixItContract.SyncColumns;
 
@@ -37,9 +39,11 @@ public class MixItDatabase extends SQLiteOpenHelper {
 		String SPEAKERS = "speakers";
 		String SLOTS = "slots";
 		String TRACKS = "tracks";
+		String TAGS = "tags";
 		String SYNC = "sync";
 
 		String SESSIONS_SPEAKERS = "sessions_speakers";
+		String SESSIONS_TAGS = "sessions_tags";
 
 		String SESSIONS_SEARCH = "sessions_search";
 		String SPEAKERS_SEARCH = "speakers_search";
@@ -58,9 +62,18 @@ public class MixItDatabase extends SQLiteOpenHelper {
 		    + "LEFT OUTER JOIN slots ON sessions.slot_id=slots.slot_id "
 			+ "LEFT OUTER JOIN tracks ON sessions.track_id=tracks.track_id";
 
+		String SESSIONS_TAGS_JOIN_TAGS = "sessions_tags "
+		    + "LEFT OUTER JOIN tags ON sessions_tags.tag_id=tags.tag_id";
+
+		String SESSIONS_TAGS_JOIN_SESSIONS_SLOTS_ROOMS_TRACKS = "sessions_tags "
+		    + "LEFT OUTER JOIN sessions ON sessions_tags.session_id=sessions.session_id "
+		    + "LEFT OUTER JOIN blocks ON sessions.block_id=blocks.block_id "
+		    + "LEFT OUTER JOIN rooms ON sessions.room_id=rooms.room_id "
+			+ "LEFT OUTER JOIN tracks ON sessions.track_id=tracks.track_id";
+
 		String SESSIONS_SEARCH_JOIN_SESSIONS_SLOTS_TRACKS = "sessions_search "
 		    + "LEFT OUTER JOIN sessions ON sessions_search.session_id=sessions.session_id "
-		    + "LEFT OUTER JOIN blocks ON sessions.block_id=blocks.block_id "
+		    + "LEFT OUTER JOIN slots ON sessions.slot_id=slots.slot_id "
 		    + "LEFT OUTER JOIN rooms ON sessions.room_id=rooms.room_id "
 			+ "LEFT OUTER JOIN tracks ON sessions.track_id=tracks.track_id";
 
@@ -82,6 +95,11 @@ public class MixItDatabase extends SQLiteOpenHelper {
 	public interface SessionsSpeakers {
 	    String SESSION_ID = "session_id";
 	    String SPEAKER_ID = "speaker_id";
+	}
+
+	public interface SessionsTags {
+	    String SESSION_ID = "session_id";
+	    String TAG_ID = "tag_id";
 	}
 
 	interface SessionsSearchColumns {
@@ -117,6 +135,7 @@ public class MixItDatabase extends SQLiteOpenHelper {
 		String SPEAKER_ID = "REFERENCES " + Tables.SPEAKERS + "(" + Speakers.SPEAKER_ID + ")";
 		String SLOT_ID = "REFERENCES " + Tables.SLOTS + "(" + Slots.SLOT_ID + ")";
 		String TRACK_ID = "REFERENCES " + Tables.TRACKS + "(" + Tracks.TRACK_ID + ")";
+		String TAG_ID = "REFERENCES " + Tables.TAGS + "(" + Tags.TAG_ID + ")";
 	}
 
 	private interface Subquery {
@@ -180,12 +199,25 @@ public class MixItDatabase extends SQLiteOpenHelper {
 		        + TracksColumns.TRACK_COLOR + " TEXT,"
 		        + "UNIQUE (" + TracksColumns.TRACK_ID + ") ON CONFLICT REPLACE)");
 
+		db.execSQL("CREATE TABLE " + Tables.TAGS + " ("
+		        + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+		        + TagsColumns.TAG_ID + " TEXT NOT NULL,"
+		        + TagsColumns.TAG_NAME + " TEXT NOT NULL,"
+		        + "UNIQUE (" + TagsColumns.TAG_ID + ") ON CONFLICT REPLACE)");
+
 		db.execSQL("CREATE TABLE " + Tables.SESSIONS_SPEAKERS + " ("
 		        + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
 		        + SessionsSpeakers.SESSION_ID + " TEXT NOT NULL " + References.SESSION_ID + ","
 		        + SessionsSpeakers.SPEAKER_ID + " TEXT NOT NULL " + References.SPEAKER_ID + ","
 		        + "UNIQUE (" + SessionsSpeakers.SESSION_ID + ","
 		                + SessionsSpeakers.SPEAKER_ID + ") ON CONFLICT REPLACE)");
+
+		db.execSQL("CREATE TABLE " + Tables.SESSIONS_TAGS + " ("
+		        + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+		        + SessionsTags.SESSION_ID + " TEXT NOT NULL " + References.SESSION_ID + ","
+		        + SessionsTags.TAG_ID + " TEXT NOT NULL " + References.TAG_ID + ","
+		        + "UNIQUE (" + SessionsTags.SESSION_ID + ","
+		                + SessionsTags.TAG_ID + ") ON CONFLICT REPLACE)");
 
 		db.execSQL("CREATE TABLE " + Tables.SYNC + " ("
 		        + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -309,11 +341,22 @@ public class MixItDatabase extends SQLiteOpenHelper {
 	    		+ Tables.TRACKS + "(" + Tracks.TRACK_ID + ")");
 
 		db.execSQL("CREATE INDEX "
+				+ Tables.TAGS + "_" + Tags.TAG_ID + "_IDX ON "
+	    		+ Tables.TAGS + "(" + Tags.TAG_ID + ")");
+
+		db.execSQL("CREATE INDEX "
 				+ Tables.SESSIONS_SPEAKERS + "_" + SessionsSpeakers.SESSION_ID + "_IDX ON "
 	    		+ Tables.SESSIONS_SPEAKERS + "(" + SessionsSpeakers.SESSION_ID + ")");
 		db.execSQL("CREATE INDEX "
 				+ Tables.SESSIONS_SPEAKERS + "_" + SessionsSpeakers.SPEAKER_ID + "_IDX ON "
 	    		+ Tables.SESSIONS_SPEAKERS + "(" + SessionsSpeakers.SPEAKER_ID + ")");
+
+		db.execSQL("CREATE INDEX "
+				+ Tables.SESSIONS_TAGS + "_" + SessionsTags.SESSION_ID + "_IDX ON "
+	    		+ Tables.SESSIONS_TAGS + "(" + SessionsTags.SESSION_ID + ")");
+		db.execSQL("CREATE INDEX "
+				+ Tables.SESSIONS_TAGS + "_" + SessionsTags.TAG_ID + "_IDX ON "
+	    		+ Tables.SESSIONS_TAGS + "(" + SessionsTags.TAG_ID + ")");
 	}
 
 	@Override
@@ -328,7 +371,9 @@ public class MixItDatabase extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS " + Tables.SPEAKERS);
 		db.execSQL("DROP TABLE IF EXISTS " + Tables.SLOTS);
 		db.execSQL("DROP TABLE IF EXISTS " + Tables.TRACKS);
+		db.execSQL("DROP TABLE IF EXISTS " + Tables.TAGS);
 		db.execSQL("DROP TABLE IF EXISTS " + Tables.SESSIONS_SPEAKERS);
+		db.execSQL("DROP TABLE IF EXISTS " + Tables.SESSIONS_TAGS);
 		db.execSQL("DROP TABLE IF EXISTS " + Tables.SYNC);
 
 		db.execSQL("DROP TRIGGER IF EXISTS " + Triggers.SESSIONS_SEARCH_INSERT);

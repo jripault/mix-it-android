@@ -106,8 +106,7 @@ public class HomeActivity extends Activity implements DetachableResultReceiver.R
 
 	/** Handle "search" title-bar action. */
 	public void onSearchClick(View v) {
-		//TODO implement it
-/*	    UIUtils.goSearch(this);*/
+	    UIUtils.goSearch(this);
 	}
 
 	/** Handle "schedule" action. */
@@ -119,7 +118,6 @@ public class HomeActivity extends Activity implements DetachableResultReceiver.R
 
 	/** Handle "sessions" action. */
 	public void onSessionsClick(View v) {
-		//TODO implement it
 	    // Launch sessions overview activity
 	    final Intent intent = new Intent(this, SessionsOverviewActivity.class);
 	    startActivity(intent);
@@ -127,7 +125,6 @@ public class HomeActivity extends Activity implements DetachableResultReceiver.R
 
 	/** Handle "starred" action. */
 	public void onStarredClick(View v) {
-		//TODO implement it
 	    // Launch list of sessions user has starred
 		startActivity(new Intent(this, StarredActivity.class));
 	}

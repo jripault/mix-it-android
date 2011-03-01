@@ -16,13 +16,21 @@
 
 package fr.mixit.android.utils;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.database.Cursor;
+import android.net.Uri;
 import android.text.format.DateUtils;
+import fr.mixit.android.provider.MixItContract;
 import org.apache.http.*;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
@@ -36,8 +44,10 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HttpContext;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.zip.GZIPInputStream;
 
 
@@ -45,10 +55,10 @@ public class SyncUtils {
 
     private static final int SECOND_IN_MILLIS = (int) DateUtils.SECOND_IN_MILLIS;
     
-    private static final String HEADER_ACCEPT_ENCODING = "Accept-Encoding";
-    private static final String ENCODING_GZIP = "gzip";
+//    private static final String HEADER_ACCEPT_ENCODING = "Accept-Encoding";
+//    private static final String ENCODING_GZIP = "gzip";
     
-    private static final String BASE_MD5_URL = "http://devoxx2010.appspot.com/requestmd5key?requestUri=";
+//    private static final String BASE_MD5_URL = "http://devoxx2010.appspot.com/requestmd5key?requestUri=";
 
     /**
      * Generate and return a {@link org.apache.http.client.HttpClient} configured for general use,
@@ -97,9 +107,9 @@ public class SyncUtils {
         return client;
     }
 
-/*    public static String getLocalMd5(ContentResolver resolver, String url) {
-    	final String syncId = Sync.generateSyncId(url);
-    	final Uri uri = Sync.buildSyncUri(syncId);
+    public static String getLocalMd5(ContentResolver resolver, String url) {
+    	final String syncId = MixItContract.Sync.generateSyncId(url);
+    	final Uri uri = MixItContract.Sync.buildSyncUri(syncId);
     	Cursor cursor = resolver.query(uri, SyncQuery.PROJECTION, null, null, null);
     	try {
     		if (!cursor.moveToFirst()) return "";
@@ -111,7 +121,7 @@ public class SyncUtils {
 
     public static String getRemoteMd5(HttpClient httpClient, String url) {
     	try {
-	    	final String requestMd5KeyUrl = BASE_MD5_URL + url;
+	    	final String requestMd5KeyUrl = url + "/md5";
 	        final HttpUriRequest request = new HttpGet(requestMd5KeyUrl);
 	        final HttpResponse resp = httpClient.execute(request);
 	        final int status = resp.getStatusLine().getStatusCode();
@@ -145,13 +155,13 @@ public class SyncUtils {
     }
 
     public static void updateLocalMd5(ContentResolver resolver, String url, String md5) {
-        final String syncId = Sync.generateSyncId(url);
+        final String syncId = MixItContract.Sync.generateSyncId(url);
         final ContentValues contentValues = new ContentValues();
-        contentValues.put(Sync.URI_ID, syncId);
-        contentValues.put(Sync.URI, url);
-        contentValues.put(Sync.MD5, md5);
-        resolver.insert(Sync.CONTENT_URI, contentValues);
-    } */
+        contentValues.put(MixItContract.Sync.URI_ID, syncId);
+        contentValues.put(MixItContract.Sync.URI, url);
+        contentValues.put(MixItContract.Sync.MD5, md5);
+        resolver.insert(MixItContract.Sync.CONTENT_URI, contentValues);
+    }
 
     /**
      * Build and return a user-agent string that can identify this application
@@ -190,13 +200,13 @@ public class SyncUtils {
         }
     }*/
     
-    /** {@link Sync} query parameters */
-/*    private interface SyncQuery {
+    /** {@link fr.mixit.android.provider.MixItContract.Sync} query parameters */
+    private interface SyncQuery {
     	String [] PROJECTION = {
-    			Sync.MD5,
+    			MixItContract.Sync.MD5,
     	};
     	
     	int MD5 = 0;
-    }*/
+    }
     
 }

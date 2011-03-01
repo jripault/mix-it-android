@@ -52,7 +52,11 @@ public class MixItProvider extends ContentProvider {
 	private static final int SYNC = 700;
 	private static final int SYNC_ID = 701;
 
-	private static final int SEARCH_SUGGEST = 800;
+	private static final int TAGS = 800;
+	private static final int TAGS_ID = 801;
+	private static final int TAGS_ID_SESSIONS = 802;
+
+	private static final int SEARCH_SUGGEST = 900;
 
 	private MixItDatabase mOpenHelper;
 
@@ -102,6 +106,10 @@ public class MixItProvider extends ContentProvider {
 
 		matcher.addURI(authority, "sync", SYNC);
 		matcher.addURI(authority, "sync/*", SYNC_ID);
+
+		matcher.addURI(authority, "tags", TAGS);
+		matcher.addURI(authority, "tags/*", TAGS_ID);
+		matcher.addURI(authority, "tags/*/sessions", TAGS_ID_SESSIONS);
 
 		matcher.addURI(authority, "search_suggest_query", SEARCH_SUGGEST);
 
@@ -155,6 +163,12 @@ public class MixItProvider extends ContentProvider {
 		        return MixItContract.Sync.CONTENT_TYPE;
 		    case SYNC_ID:
 		        return MixItContract.Sync.CONTENT_ITEM_TYPE;
+		    case TAGS:
+		        return MixItContract.Tags.CONTENT_TYPE;
+		    case TAGS_ID:
+		        return MixItContract.Tags.CONTENT_ITEM_TYPE;
+		    case TAGS_ID_SESSIONS:
+		        return MixItContract.Sessions.CONTENT_TYPE;
 		    case TRACKS_ID_SESSIONS:
 		        return MixItContract.Sessions.CONTENT_TYPE;
 	        default:
@@ -229,6 +243,14 @@ public class MixItProvider extends ContentProvider {
 		    case SYNC: {
 		        db.insertOrThrow(MixItDatabase.Tables.SYNC, null, values);
 		        return MixItContract.Sync.buildSyncUri(values.getAsString(MixItContract.Sync.URI_ID));
+		    }
+		    case TAGS: {
+		        db.insertOrThrow(MixItDatabase.Tables.TAGS, null, values);
+		        return MixItContract.Tags.buildTagUri(values.getAsString(MixItContract.Tags.TAG_ID));
+		    }
+		    case TAGS_ID_SESSIONS: {
+		        db.insertOrThrow(MixItDatabase.Tables.SESSIONS_TAGS, null, values);
+		        return MixItContract.Sessions.buildSessionUri(values.getAsString(MixItDatabase.SessionsTags.SESSION_ID));
 		    }
 		    case SEARCH_SUGGEST: {
 		        db.insertOrThrow(MixItDatabase.Tables.SEARCH_SUGGEST, null, values);
@@ -361,6 +383,19 @@ public class MixItProvider extends ContentProvider {
 		    }
 		    case SEARCH_SUGGEST: {
 		        return builder.table(MixItDatabase.Tables.SEARCH_SUGGEST);
+		    }
+		    case TAGS: {
+		        return builder.table(MixItDatabase.Tables.TAGS);
+		    }
+		    case TAGS_ID: {
+		        final String tagId = MixItContract.Tags.getTagId(uri);
+		        return builder.table(MixItDatabase.Tables.TAGS)
+		                .where(MixItContract.Tags.TAG_ID + "=?", tagId);
+		    }
+		    case TAGS_ID_SESSIONS: {
+		        final String tagId = MixItContract.Tags.getTagId(uri);
+		        return builder.table(MixItDatabase.Tables.SESSIONS_TAGS)
+		                .where(MixItContract.Tags.TAG_ID + "=?", tagId);
 		    }
 	        default: {
 	            throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -553,6 +588,27 @@ public class MixItProvider extends ContentProvider {
                 		.mapToTable(MixItContract.Tracks.TRACK_COLOR, MixItDatabase.Tables.TRACKS)
                         .where(Qualified.SESSIONS_TRACK_ID + "=?", trackId);
             }
+		    case TAGS: {
+		        return builder.table(MixItDatabase.Tables.TAGS)
+				        .map(MixItContract.Tags.SESSIONS_COUNT, Subquery.TAG_SESSIONS_COUNT);
+		    }
+		    case TAGS_ID: {
+		        final String tagId = MixItContract.Tags.getTagId(uri);
+		        return builder.table(MixItDatabase.Tables.TAGS)
+		                .where(MixItContract.Tags.TAG_ID + "=?", tagId);
+		    }
+		    case TAGS_ID_SESSIONS: {
+		        final String tagId = MixItContract.Tags.getTagId(uri);
+		        return builder.table(MixItDatabase.Tables.SESSIONS_TAGS_JOIN_SESSIONS_SLOTS_ROOMS_TRACKS)
+		                .mapToTable(MixItContract.Sessions._ID, MixItDatabase.Tables.SESSIONS)
+		                .mapToTable(MixItContract.Sessions.SESSION_ID, MixItDatabase.Tables.SESSIONS)
+		                .mapToTable(MixItContract.Sessions.SLOT_ID, MixItDatabase.Tables.SESSIONS)
+		                .mapToTable(MixItContract.Sessions.ROOM, MixItDatabase.Tables.SESSIONS)
+		                .mapToTable(MixItContract.Sessions.TRACK_ID, MixItDatabase.Tables.SESSIONS)
+		                .map(MixItContract.Sessions.STARRED_IN_SLOT_COUNT, Subquery.SLOT_STARRED_SESSIONS_COUNT)
+		                .mapToTable(MixItContract.Tracks.TRACK_COLOR, MixItDatabase.Tables.TRACKS)
+		                .where(Qualified.SESSIONS_TAGS_TAG_ID + "=?", tagId);
+		    }
             default: {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
             }
@@ -580,7 +636,7 @@ public class MixItProvider extends ContentProvider {
 	    }
 
 	    sb.map(SessionsIndexQuery.COUNT, "COUNT(" + MixItContract.Sessions.SESSION_ID + ")");
-
+                                                                           `
 	    Cursor indexCursor = sb.query(db, SessionsIndexQuery.COLUMNS,
 	            SessionsIndexQuery.ORDER_BY, null ,
 	            SessionsIndexQuery.ORDER_BY + sortOrderSuffix, null);
@@ -656,6 +712,10 @@ public class MixItProvider extends ContentProvider {
 			    + " WHERE " + Qualified.SESSIONS_SPEAKERS_SPEAKER_ID + "="
 			    + Qualified.SPEAKERS_SPEAKER_ID + ")";
 
+		String TAG_SESSIONS_COUNT = "(SELECT COUNT(" + Qualified.SESSIONS_TAGS_TAG_ID
+		+ ") FROM " + MixItDatabase.Tables.SESSIONS_TAGS + " WHERE "
+		+ Qualified.SESSIONS_TAGS_TAG_ID + "=" + Qualified.TAGS_TAG_ID + ")";
+
 	    String TRACK_SESSIONS_COUNT = "(SELECT COUNT(" + Qualified.SESSIONS_TRACK_ID
 	            + ") FROM " + MixItDatabase.Tables.SESSIONS + " WHERE "
 	            + Qualified.SESSIONS_TRACK_ID + "=" + Qualified.TRACKS_TRACK_ID + ")";
@@ -701,9 +761,16 @@ public class MixItProvider extends ContentProvider {
 	    String SESSIONS_SPEAKERS_SPEAKER_ID = MixItDatabase.Tables.SESSIONS_SPEAKERS + "."
 	            + MixItDatabase.SessionsSpeakers.SPEAKER_ID;
 
+		String SESSIONS_TAGS_SESSION_ID = MixItDatabase.Tables.SESSIONS_TAGS + "."
+				+ MixItDatabase.SessionsTags.SESSION_ID;
+		String SESSIONS_TAGS_TAG_ID = MixItDatabase.Tables.SESSIONS_TAGS + "."
+				+ MixItDatabase.SessionsTags.TAG_ID;
+
 	    String SESSIONS_STARRED = MixItDatabase.Tables.SESSIONS + "." + MixItContract.Sessions.STARRED;
 
 	    String TRACKS_TRACK_ID = MixItDatabase.Tables.TRACKS + "." + MixItContract.Tracks.TRACK_ID;
+
+		String TAGS_TAG_ID = MixItDatabase.Tables.TAGS + "." + MixItContract.Tags.TAG_ID;
 
 	    String SLOTS_SLOT_ID = MixItDatabase.Tables.SLOTS + "." + MixItContract.Slots.SLOT_ID;
 	    String SLOTS_SLOT_START = MixItDatabase.Tables.SLOTS + "." + MixItContract.Slots.SLOT_START;

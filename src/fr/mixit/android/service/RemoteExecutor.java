@@ -47,7 +47,7 @@ public class RemoteExecutor {
 		final ArrayList<JSONArray> entries = Lists.newArrayList();
 //		for (String url : urls) {
 	        final HttpUriRequest request = new HttpGet(url);
-	        final String md5 = "";//SyncUtils.getRemoteMd5(mHttpClient, url);
+	        final String md5 = SyncUtils.getRemoteMd5(mHttpClient, url);
 	        JSONArray requestEntries = executeRequest(request);
 	        entries.add(requestEntries);
 //	        result.add(new RequestHash(url, md5));

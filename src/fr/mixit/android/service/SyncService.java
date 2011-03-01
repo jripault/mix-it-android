@@ -40,6 +40,8 @@ public class SyncService extends IntentService {
 	private static final String [] URLS = {
 			Constants.SESSIONS_URL,
 			Constants.SPEAKERS_URL,
+			Constants.SLOTS_URL,
+			Constants.TRACKS_URL,
 	};
 
 	private static final int VERSION_NONE = 0;
@@ -104,16 +106,16 @@ public class SyncService extends IntentService {
             if (performRemoteSync) {
             	// Parse values from REST interface
 	            RequestHash result = mRemoteExecutor.executeGet(Constants.TRACKS_URL, new RemoteTracksHandler());
-//				SyncUtils.updateLocalMd5(mResolver, result.getUrl(), result.getMd5());
+				SyncUtils.updateLocalMd5(mResolver, result.getUrl(), result.getMd5());
 
 	            result = mRemoteExecutor.executeGet(Constants.SLOTS_URL, new RemoteSlotsHandler());
-//	            SyncUtils.updateLocalMd5(mResolver, result.getUrl(), result.getMd5());
+	            SyncUtils.updateLocalMd5(mResolver, result.getUrl(), result.getMd5());
 
 	            result = mRemoteExecutor.executeGet(Constants.SPEAKERS_URL, new RemoteSpeakersHandler());
-//	            SyncUtils.updateLocalMd5(mResolver, result.getUrl(), result.getMd5());
+	            SyncUtils.updateLocalMd5(mResolver, result.getUrl(), result.getMd5());
 
 	            result = mRemoteExecutor.executeGet(Constants.SESSIONS_URL, new RemoteSessionsHandler());
-//	            SyncUtils.updateLocalMd5(mResolver, result.getUrl(), result.getMd5());
+	            SyncUtils.updateLocalMd5(mResolver, result.getUrl(), result.getMd5());
 
 	            // Save last remote sync time
 	            syncServicePrefs.edit().putLong(SyncPrefs.LAST_REMOTE_SYNC, startRemote).commit();
@@ -192,10 +194,9 @@ public class SyncService extends IntentService {
 	 * Checks if the content of a given url has changed.
 	 */
 	private static boolean isContentChanged(ContentResolver resolver, HttpClient httpClient, String url) {
-/*		final String localMd5 = SyncUtils.getLocalMd5(resolver, url);
+		final String localMd5 = SyncUtils.getLocalMd5(resolver, url);
 		final String remoteMd5 = SyncUtils.getRemoteMd5(httpClient, url);
-		return (remoteMd5 != null && !remoteMd5.equals(localMd5));*/
-		return true;
+		return (remoteMd5 != null && !remoteMd5.equals(localMd5));
 	}
 
 	private interface SyncPrefs {
@@ -205,3 +206,4 @@ public class SyncService extends IntentService {
 	}
 
 }
+
