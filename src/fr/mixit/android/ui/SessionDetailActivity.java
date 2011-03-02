@@ -60,7 +60,7 @@ public class SessionDetailActivity extends TabActivity implements NotifyingAsync
     public static final String EXTRA_TRACK = "fr.mixit.android.extra.TRACK";
 
     private static final String TAG_SUMMARY = "summary";
-    private static final String TAG_NOTES = "notes";
+//    private static final String TAG_NOTES = "notes";
     private static final String TAG_PARALLEL = "parallel";
 
     private String mSessionId;
@@ -74,12 +74,12 @@ public class SessionDetailActivity extends TabActivity implements NotifyingAsync
     private CompoundButton mStarred;
 
     private TextView mSummary;
-    private LinearLayout mTypeSlot;
 
     private NotifyingAsyncQueryHandler mHandler;
 
     private boolean mSessionCursor = false;
     private boolean mSpeakersCursor = false;
+	private boolean mTagsCursor = false;
     private boolean mHasSummaryContent = false;
 
     @Override
@@ -102,7 +102,6 @@ public class SessionDetailActivity extends TabActivity implements NotifyingAsync
         FractionalTouchDelegate.setupDelegate(starParent, mStarred, new RectF(0.6f, 0f, 1f, 0.8f));
 
         mSummary = (TextView) findViewById(R.id.session_abstract);
-        mTypeSlot = (LinearLayout) findViewById(R.id.session_type_block);
 
         final Intent intent = getIntent();
         mSessionUri = intent.getData();
@@ -112,10 +111,12 @@ public class SessionDetailActivity extends TabActivity implements NotifyingAsync
 
         // Start background queries to load session details
         final Uri speakersUri = MixItContract.Sessions.buildSpeakersDirUri(mSessionId);
+	    final Uri tagsUri = MixItContract.Sessions.buildTagsDirUri(mSessionId);
 
         mHandler = new NotifyingAsyncQueryHandler(getContentResolver(), this);
         mHandler.startQuery(SessionsQuery._TOKEN, mSessionUri, SessionsQuery.PROJECTION);
         mHandler.startQuery(SpeakersQuery._TOKEN, speakersUri, SpeakersQuery.PROJECTION);
+	    mHandler.startQuery(TagsQuery._TOKEN, tagsUri, TagsQuery.PROJECTION);
     }
 
     /** Build and add "summary" tab. */
@@ -161,6 +162,8 @@ public class SessionDetailActivity extends TabActivity implements NotifyingAsync
             onTrackQueryComplete(cursor);
         } else if (token == SpeakersQuery._TOKEN) {
             onSpeakersQueryComplete(cursor);
+        } else if (token == TagsQuery._TOKEN) {
+            onTagsQueryComplete(cursor);
         } else {
             cursor.close();
         }
@@ -274,6 +277,44 @@ public class SessionDetailActivity extends TabActivity implements NotifyingAsync
         }
     }
 
+	/** Handle {@link TagsQuery} {@link Cursor}. */
+	private void onTagsQueryComplete(Cursor cursor) {
+	    try {
+	        mTagsCursor = true;
+
+	        final ViewGroup tagsGroup = (ViewGroup) findViewById(R.id.session_tags_block);
+
+	        boolean hasTags = false;
+
+		    final StringBuilder sb = new StringBuilder();
+	        while (cursor.moveToNext()) {
+	            hasTags = true;
+	            mHasSummaryContent = true;
+		        sb.append("<a href=\"");
+		        sb.append(MixItContract.Tags.buildSessionsDirUri(cursor.getString(TagsQuery.TAG_ID)));
+		        sb.append("\">");
+		        sb.append(cursor.getString(TagsQuery.TAG_NAME));
+		        sb.append("</a>");
+		        if (!cursor.isLast()) {
+			        sb.append(" ");
+		        }
+	        }
+	        final String tag = sb.toString();
+
+	        final TextView tags = (TextView) findViewById(R.id.session_tags);
+	        UIUtils.setTextMaybeHtml(tags, tag);
+
+	        tagsGroup.setVisibility(hasTags ? View.VISIBLE : View.GONE);
+
+	        // Show empty message when all data is loaded, and nothing to show
+	        if (mSessionCursor && !mHasSummaryContent) {
+	            findViewById(android.R.id.empty).setVisibility(View.VISIBLE);
+	        }
+	    } finally {
+	        cursor.close();
+	    }
+	}
+
     /** Handle "home" title-bar action. */
     public void onHomeClick(View v) {
         UIUtils.goHome(this);
@@ -353,5 +394,18 @@ public class SessionDetailActivity extends TabActivity implements NotifyingAsync
         int SPEAKER_FIRST_NAME = 1;
         int SPEAKER_LAST_NAME = 2;
     }
+
+	/** {@link fr.mixit.android.provider.MixItContract.Tags} query parameters. */
+	private interface TagsQuery {
+	    int _TOKEN = 0x4;
+
+	    String[] PROJECTION = {
+			    MixItContract.Tags.TAG_ID,
+	            MixItContract.Tags.TAG_NAME,
+	    };
+
+	    int TAG_ID = 0;
+	    int TAG_NAME = 1;
+	}
 
 }

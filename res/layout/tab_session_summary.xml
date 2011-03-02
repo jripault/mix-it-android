@@ -34,6 +34,25 @@
             android:paddingBottom="5dp"
             style="@style/TextBody" />
 
+	    <LinearLayout
+	        android:id="@+id/session_tags_block"
+	        android:orientation="vertical"
+	        android:paddingBottom="10dp"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content">
+	        <TextView
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:paddingBottom="5dp"
+	            android:text="@string/session_tags"
+	            style="@style/TextHeader" />
+	        <TextView
+	            android:id="@+id/session_tags"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            style="@style/TextBody" />
+	    </LinearLayout>
+
         <LinearLayout
             android:id="@+id/session_speakers_block"
             android:orientation="vertical"
@@ -47,25 +66,6 @@
                 android:text="@string/session_speakers"
                 style="@style/TextHeader" />
             <!-- TODO: inflate speaker details here as custom layouts -->
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/session_type_block"
-            android:orientation="vertical"
-            android:paddingBottom="10dp"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="5dp"
-                android:text="@string/session_type"
-                style="@style/TextHeader" />
-            <TextView
-                android:id="@+id/session_type"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                style="@style/TextBody" />
         </LinearLayout>
 
         <TextView

@@ -65,6 +65,9 @@ public class SpeakerDetailActivity extends TabActivity implements NotifyingAsync
     
     private TextView mName;
     private TextView mCompany;
+    private TextView mLinkedIn;
+    private TextView mTwitter;
+    private TextView mBlog;
     private TextView mBio;
     private SpeakerImageView mImage;
 
@@ -82,7 +85,10 @@ public class SpeakerDetailActivity extends TabActivity implements NotifyingAsync
         ((TextView) findViewById(R.id.title_text)).setText(getTitle());
         
         mName = (TextView) findViewById(R.id.speaker_name);
-        mCompany = (TextView) findViewById(R.id.speaker_company);
+		mCompany = (TextView) findViewById(R.id.speaker_company);
+		mLinkedIn = (TextView) findViewById(R.id.speaker_linkedin);
+		mTwitter = (TextView) findViewById(R.id.speaker_twitter);
+		mBlog = (TextView) findViewById(R.id.speaker_blog);
         mBio = (TextView) findViewById(R.id.speaker_bio);
         mImage = (SpeakerImageView) findViewById(R.id.speaker_image);
         
@@ -136,7 +142,10 @@ public class SpeakerDetailActivity extends TabActivity implements NotifyingAsync
             if (!cursor.moveToFirst()) return;
 
             mName.setText(cursor.getString(SpeakersQuery.LAST_NAME) + " " + cursor.getString(SpeakersQuery.FIRST_NAME));
-            mCompany.setText(cursor.getString(SpeakersQuery.COMPANY));
+	        mCompany.setText(cursor.getString(SpeakersQuery.COMPANY));
+	        mLinkedIn.setText(cursor.getString(SpeakersQuery.LINKEDIN));
+	        mTwitter.setText(cursor.getString(SpeakersQuery.TWITTER));
+	        mBlog.setText(cursor.getString(SpeakersQuery.BLOG));
             mBio.setText(cursor.getString(SpeakersQuery.BIO));
 
             Bitmap speakerImage = loadImageFromCache();
@@ -231,15 +240,21 @@ public class SpeakerDetailActivity extends TabActivity implements NotifyingAsync
                 MixItContract.Speakers.LAST_NAME,
                 MixItContract.Speakers.FIRST_NAME,
                 MixItContract.Speakers.BIO,
-                MixItContract.Speakers.COMPANY,
+		        MixItContract.Speakers.COMPANY,
+		        MixItContract.Speakers.LINKEDIN,
+		        MixItContract.Speakers.TWITTER,
+		        MixItContract.Speakers.BLOG,
                 MixItContract.Speakers.IMAGE_URL,
         };
 
         int FIRST_NAME = 0;
         int LAST_NAME = 1;
         int BIO = 2;
-        int COMPANY = 3;
-        int IMAGE_URL = 4;
+	    int COMPANY = 3;
+	    int LINKEDIN = 4;
+	    int TWITTER = 5;
+	    int BLOG = 6;
+        int IMAGE_URL = 7;
     }
 
 }

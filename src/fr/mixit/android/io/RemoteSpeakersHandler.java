@@ -80,9 +80,9 @@ public class RemoteSpeakersHandler extends JSONHandler {
 			        builder.withValue(MixItContract.Speakers.LAST_NAME, speaker.getString("lastName"));
 			        builder.withValue(MixItContract.Speakers.FIRST_NAME, speaker.getString("firstName"));
 					builder.withValue(MixItContract.Speakers.BIO, speaker.getString("bio"));
-//		        String twitter = speaker.getString("twitter");
-//		        String linkedin = speaker.getString("linkedin");
-//		        String blog = speaker.getString("blog");
+			        builder.withValue(MixItContract.Speakers.LINKEDIN, speaker.getString("linkedin"));
+			        builder.withValue(MixItContract.Speakers.TWITTER, speaker.getString("twitter"));
+			        builder.withValue(MixItContract.Speakers.BLOG, speaker.getString("blog"));
 					builder.withValue(MixItContract.Speakers.COMPANY, speaker.getString("company"));
 					builder.withValue(MixItContract.Speakers.IMAGE_URL, speaker.getString("urlImage"));
 					build = true;
@@ -112,16 +112,25 @@ public class RemoteSpeakersHandler extends JSONHandler {
             final String curFirstName = cursor.getString(SpeakersQuery.FIRST_NAME).toLowerCase().trim();
         	final String curLastName = cursor.getString(SpeakersQuery.LAST_NAME).toLowerCase().trim();
         	final String curBio = cursor.getString(SpeakersQuery.BIO).toLowerCase().trim();
-        	final String curCompany = cursor.getString(SpeakersQuery.COMPANY).toLowerCase().trim();
+	        final String curCompany = cursor.getString(SpeakersQuery.COMPANY).toLowerCase().trim();
+	        final String curLinkedIn = cursor.getString(SpeakersQuery.LINKEDIN).toLowerCase().trim();
+	        final String curTwitter = cursor.getString(SpeakersQuery.TWITTER).toLowerCase().trim();
+	        final String curBlog = cursor.getString(SpeakersQuery.BLOG).toLowerCase().trim();
         	final String newFirstName = speaker.has("firstName") ? speaker.getString("firstName").toLowerCase().trim() : curFirstName;
         	final String newLastName = speaker.has("lastName") ? speaker.getString("lastName").toLowerCase().trim() : curLastName;
         	final String newBio = speaker.has("bio") ? speaker.getString("bio").toLowerCase().trim() : curBio;
-        	final String newCompany = speaker.has("company") ? speaker.getString("company").toLowerCase().trim() : curCompany;
-        	
+	        final String newCompany = speaker.has("company") ? speaker.getString("company").toLowerCase().trim() : curCompany;
+	        final String newLinkedIn = speaker.has("linkedin") ? speaker.getString("linkedin").toLowerCase().trim() : curLinkedIn;
+	        final String newTwitter = speaker.has("twitter") ? speaker.getString("twitter").toLowerCase().trim() : curTwitter;
+	        final String newBlog = speaker.has("blog") ? speaker.getString("blog").toLowerCase().trim() : curBlog;
+
         	return (!curFirstName.equals(newFirstName)
         			|| !curLastName.equals(newLastName)
         			|| !curBio.equals(newBio)
-        			|| !curCompany.equals(newCompany));
+        			|| !curCompany.equals(newCompany)
+        			|| !curLinkedIn.equals(newLinkedIn)
+        			|| !curTwitter.equals(newTwitter)
+        			|| !curBlog.equals(newBlog));
         } finally {
             cursor.close();
         }
@@ -134,7 +143,10 @@ public class RemoteSpeakersHandler extends JSONHandler {
                 MixItContract.Speakers.FIRST_NAME,
                 MixItContract.Speakers.LAST_NAME,
                 MixItContract.Speakers.BIO,
-                MixItContract.Speakers.COMPANY,
+		        MixItContract.Speakers.COMPANY,
+		        MixItContract.Speakers.LINKEDIN,
+		        MixItContract.Speakers.TWITTER,
+		        MixItContract.Speakers.BLOG,
         };
 
         int SPEAKER_ID = 0;
@@ -142,6 +154,9 @@ public class RemoteSpeakersHandler extends JSONHandler {
         int LAST_NAME = 2;
         int BIO = 3;
         int COMPANY = 4;
+        int LINKEDIN = 5;
+        int TWITTER = 6;
+        int BLOG = 7;
     }
 
 }
