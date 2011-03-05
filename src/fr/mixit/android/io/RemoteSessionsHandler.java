@@ -100,7 +100,8 @@ public class RemoteSessionsHandler extends JSONHandler {
 				    }
 
 				    if (session.has("slot")) {
-					    // TODO managing slots !!
+					    final String trackId = session.getString("slot");
+						builder.withValue(MixItContract.Sessions.SLOT_ID, trackId);
 				    }
 
 				    batch.add(builder.build());

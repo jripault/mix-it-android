@@ -64,8 +64,8 @@ public class StarredActivity extends TabActivity implements NotifyingAsyncQueryH
 /*    private View mEmailSeparator;
     private View mEmailButton;*/
 
-/*	private SharedPreferences mySchedulePrefs;
-    private SharedPreferences settingsPrefs;*/
+//	private SharedPreferences mySchedulePrefs;
+    private SharedPreferences settingsPrefs;
     
     private int starredSessionCount = 0;
 
@@ -79,8 +79,8 @@ public class StarredActivity extends TabActivity implements NotifyingAsyncQueryH
 /*        mEmailSeparator = findViewById(R.id.email_separator);
         mEmailButton = findViewById(R.id.btn_title_email);*/
 
-/*    	mySchedulePrefs = getSharedPreferences(MyScheduleActivity.MySchedulePrefs.DEVOXXSCHED_MYSCHEDULE, Context.MODE_PRIVATE);
-    	settingsPrefs = getSharedPreferences(SettingsActivity.SETTINGS_NAME, MODE_PRIVATE);*/
+//    	mySchedulePrefs = getSharedPreferences(MyScheduleActivity.MySchedulePrefs.DEVOXXSCHED_MYSCHEDULE, Context.MODE_PRIVATE);
+    	settingsPrefs = getSharedPreferences(SettingsActivity.SETTINGS_NAME, MODE_PRIVATE);
     	
     	setupSessionsTab();
         setupSpeakersTab();
@@ -199,7 +199,7 @@ public class StarredActivity extends TabActivity implements NotifyingAsyncQueryH
 	    	.build();
         final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         intent.addCategory(Intent.CATEGORY_TAB);
-        final boolean highlightParalleStarred = true;//settingsPrefs.getBoolean(getString(R.string.visualize_parallel_starred_sessions_key), false);
+        final boolean highlightParalleStarred = settingsPrefs.getBoolean(getString(R.string.visualize_parallel_starred_sessions_key), false);
         intent.putExtra(SessionsActivity.EXTRA_HIHGLIGHT_PARALLEL_STARRED, highlightParalleStarred);
         intent.putExtra(SessionsActivity.EXTRA_FOCUS_CURRENT_NEXT_SESSION, true);
         

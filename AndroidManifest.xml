@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          android:installLocation="preferExternal"
+          android:versionCode="1" android:versionName="0.1"
           package="fr.mixit.android">
 
 	<permission android:name="fr.mixit.android.permission.WRITE_SCHEDULE"
@@ -9,7 +11,7 @@
 
 	<application android:label="@string/app_name"
 		android:icon="@drawable/icon"
-		android:debuggable="true">
+		android:debuggable="false">
 
 		<activity android:name=".ui.HomeActivity"
 			android:label="@string/app_name"

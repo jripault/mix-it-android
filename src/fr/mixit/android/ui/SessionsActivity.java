@@ -106,13 +106,13 @@ public class SessionsActivity extends ListActivity implements NotifyingAsyncQuer
         final Intent intent = getIntent();
         final Uri sessionsUri = intent.getData();
 
-//        final SharedPreferences settingsPrefs = getSharedPreferences(SettingsActivity.SETTINGS_NAME, MODE_PRIVATE);
-//        final boolean prefFocusCurrentNextSession = settingsPrefs.getBoolean(getString(R.string.focus_session_during_conference_key), true);
+        final SharedPreferences settingsPrefs = getSharedPreferences(SettingsActivity.SETTINGS_NAME, MODE_PRIVATE);
+        final boolean prefFocusCurrentNextSession = settingsPrefs.getBoolean(getString(R.string.focus_session_during_conference_key), true);
 
         mTrackColor = intent.getIntExtra(EXTRA_TRACK_COLOR, -1);
         mHighlightParallelStarred = intent.getBooleanExtra(EXTRA_HIHGLIGHT_PARALLEL_STARRED, false);
-//        mFocusCurrentNextSession = prefFocusCurrentNextSession && intent.getBooleanExtra(EXTRA_FOCUS_CURRENT_NEXT_SESSION, false);
-//        mGrayOutSessions = settingsPrefs.getBoolean(getString(R.string.gray_out_passed_sessions_key), true);
+        mFocusCurrentNextSession = prefFocusCurrentNextSession && intent.getBooleanExtra(EXTRA_FOCUS_CURRENT_NEXT_SESSION, false);
+        mGrayOutSessions = settingsPrefs.getBoolean(getString(R.string.gray_out_passed_sessions_key), true);
 
         if (mTrackColor != -1) UIUtils.setTitleBarColor(findViewById(R.id.title_container), mTrackColor);
 
