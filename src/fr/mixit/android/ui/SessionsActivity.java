@@ -54,7 +54,6 @@ public class SessionsActivity extends ListActivity implements NotifyingAsyncQuer
     private static final String TAG = "SessionsActivity";
     
     public static final String EXTRA_TRACK_COLOR = "fr.mixit.android.extra.TRACK_COLOR";
-    public static final String EXTRA_NO_WEEKDAY_HEADER = "fr.mixit.android.extra.NO_WEEKDAY_HEADER";
     public static final String EXTRA_HIHGLIGHT_PARALLEL_STARRED = "fr.mixit.android.extra.HIGHLIGHT_PARALLEL_STARRED";
     public static final String EXTRA_FOCUS_CURRENT_NEXT_SESSION = "fr.mixit.android.extra.FOCUS_CURRENT_NEXT_SESSION";
 

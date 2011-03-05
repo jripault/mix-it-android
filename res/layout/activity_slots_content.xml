@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright 2010 Google Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+
+<!--
+	Adapted by Peter Kuterna to support the Devoxx conference.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <LinearLayout style="@style/TitleBar">
+        <ImageButton style="@style/TitleBarAction"
+            android:contentDescription="@string/description_home"
+            android:src="@drawable/ic_title_home"
+            android:onClick="onHomeClick" />
+
+        <ImageView style="@style/TitleBarSeparator" />
+        <TextView style="@style/TitleBarText" />
+
+        <ImageView style="@style/TitleBarSeparator" />
+        <ImageButton style="@style/TitleBarAction"
+            android:contentDescription="@string/description_search"
+            android:src="@drawable/ic_title_search"
+            android:onClick="onSearchClick" />
+    </LinearLayout>
+
+	<ScrollView
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:mixit="http://schemas.android.com/apk/res/fr.mixit.android"
+		android:id="@+id/slots_scroll"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent">
+		<view
+			class="fr.mixit.android.ui.widget.SlotsLayout"
+			android:id="@+id/slots"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content">
+			<view
+				class="fr.mixit.android.ui.widget.TimeRulerView"
+				android:id="@id/slots_ruler"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				mixit:headerWidth="46dip"
+				mixit:hourHeight="65dip"
+				mixit:horizontalDivider="true"
+				mixit:labelTextSize="13sp"
+				mixit:labelPaddingLeft="5dip"
+				mixit:labelColor="#000000"
+				mixit:dividerColor="#d9d9d9"
+				mixit:startHour="8"
+				mixit:endHour="20" />
+			<View
+				android:id="@id/slots_now"
+				android:background="@drawable/now_bar"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content" />
+		</view>
+	</ScrollView>
+</LinearLayout>

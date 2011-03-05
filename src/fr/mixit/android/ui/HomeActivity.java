@@ -112,8 +112,8 @@ public class HomeActivity extends Activity implements DetachableResultReceiver.R
 	/** Handle "schedule" action. */
 	public void onScheduleClick(View v) {
 		//TODO implement it
-/*	    // Launch overall conference schedule
-	    startActivity(new Intent(this, ScheduleActivity.class));*/
+	    // Launch overall conference schedule
+	    startActivity(new Intent(this, SlotsActivity.class));
 	}
 
 	/** Handle "sessions" action. */

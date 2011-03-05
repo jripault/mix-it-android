@@ -4,4 +4,7 @@
 	<item type="id" name="title_logo" />
 	<item type="id" name="title_text" />
 
+	<item type="id" name="slots_ruler" />
+	<item type="id" name="slots_now" />
+
 </resources>

@@ -22,6 +22,17 @@
 			</intent-filter>
 		</activity>
 
+		<activity android:name=".ui.SlotsActivity"
+			android:theme="@style/Theme.MixIT"
+			android:label="@string/title_schedule">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.TAB" />
+				<data android:mimeType="vnd.android.cursor.dir/vnd.mixit.slot" />
+			</intent-filter>
+		</activity>
+
 		<activity android:name=".ui.SessionsOverviewActivity"
 			android:theme="@style/Theme.MixITIndexer"
 			android:label="@string/title_sessions" />

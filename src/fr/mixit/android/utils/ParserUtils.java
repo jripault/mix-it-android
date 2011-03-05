@@ -21,6 +21,7 @@ package fr.mixit.android.utils;
 
 import android.text.format.Time;
 
+import java.util.HashMap;
 import java.util.regex.Pattern;
 
 
@@ -29,9 +30,23 @@ import java.util.regex.Pattern;
  */
 public class ParserUtils {
 
+	public static final String SLOT_TYPE_SESSION = "Talk";
+	public static final String SLOT_TYPE_BREAK = "Pause";
+	public static final String SLOT_TYPE_KEYNOTE = "Keynote";
+
     /** Used to sanitize a string to be {@link android.net.Uri} safe. */
     private static final Pattern sSanitizePattern = Pattern.compile("[^a-z0-9-_]");
     private static final Pattern sParenPattern = Pattern.compile("\\(.*?\\)");
+
+	public static final HashMap<String, Integer> sTypeColumnMap = buildTypeColumnMap();
+
+	private static HashMap<String, Integer> buildTypeColumnMap() {
+	    final HashMap<String, Integer> map = Maps.newHashMap();
+	    map.put(ParserUtils.SLOT_TYPE_BREAK, 0);
+	    map.put(ParserUtils.SLOT_TYPE_KEYNOTE, 1);
+	    map.put(ParserUtils.SLOT_TYPE_SESSION, 2);
+	    return map;
+	}
 
 	private static Time sTime = new Time();
 

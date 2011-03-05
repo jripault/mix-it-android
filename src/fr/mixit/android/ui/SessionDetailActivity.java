@@ -136,7 +136,6 @@ public class SessionDetailActivity extends TabActivity implements NotifyingAsync
         final Uri parSessionsUri = MixItContract.Sessions.buildSessionsParallelDirUri(mSessionId);
         final Intent intent = new Intent(Intent.ACTION_VIEW, parSessionsUri);
         intent.addCategory(Intent.CATEGORY_TAB);
-        intent.putExtra(SessionsActivity.EXTRA_NO_WEEKDAY_HEADER, true);
 
        	host.addTab(host.newTabSpec(TAG_PARALLEL)
        			.setIndicator(buildIndicator(R.string.session_parallel))
