@@ -54,7 +54,7 @@ public class UIUtils {
 	public static final long CONFERENCE_START_MILLIS = ParserUtils.parseTime(
 	        "2011-04-05T08:30:00.000+01:00");
 	public static final long CONFERENCE_END_MILLIS = ParserUtils.parseTime(
-	        "2011-04-05T18:00:00.000+01:00");
+	        "2011-04-05T19:00:00.000+01:00");
 
 	private static final int DAY_FLAGS = DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_ABBREV_WEEKDAY;
 	private static final int TIME_FLAGS = DateUtils.FORMAT_SHOW_TIME;
@@ -160,17 +160,15 @@ public class UIUtils {
 	}
 
 	/**
-	 * Format and return the given {@link fr.mixit.android.provider.MixItContract.Slots} values using
+	 * Format and return the given {@link fr.mixit.android.provider.MixItContract.Slots} and {@link Session#ROOM} values using
 	 * {@link #CONFERENCE_TIME_ZONE}.
 	 */
-	public static String formatSessionSubtitle(long slotStart, long slotEnd,
-	        String roomName, Context context) {
+	public static String formatSessionSubtitle(long slotStart, long slotEnd, String roomName, Context context) {
 	    TimeZone.setDefault(CONFERENCE_TIME_ZONE);
 
-	    final CharSequence timeString = DateUtils.formatDateRange(context,
-	            slotStart, slotEnd, TIME_FLAGS);
+	    final CharSequence timeString = DateUtils.formatDateRange(context, slotStart, slotEnd, TIME_FLAGS);
 
-	    return context.getString(R.string.session_subtitle, ""/*timeString*/, roomName);
+	    return context.getString(R.string.session_subtitle, timeString, roomName);
 	}
 
 	public static void setSessionTitleColor(long blockStart, long blockEnd, TextView title,

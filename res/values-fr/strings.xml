@@ -21,10 +21,6 @@
 	<string name="empty_session_detail">Pas de détail de session trouvé</string>
 	<string name="empty_tags">Pas de tags trouvé</string>
 
-    <string name="now_playing_loading">Recherche de sessions aux alentours\u2026</string>
-    <string name="now_playing_no_results">Pas sessions à proximité.</string>
-    <string name="now_playing_next_up">Voir quelles sessions vont démarrer.</string>
-
 	<string name="speaker_bio">Bio</string>
 	<string name="speaker_sessions">Sessions</string>
 
@@ -42,6 +38,8 @@
 	<string name="starred_sessions">Sessions</string>
 	<string name="starred_speakers">Speakers</string>
 
+	<string name="title_now_playing">En ce moment</string>
+	<string name="title_next_up">Prochainement</string>
 	<string name="title_share">Partage utilisant</string>
     <string name="title_sessions">Sessions</string>
     <string name="title_speakers">Speakers</string>
@@ -84,6 +82,22 @@
 
 	<string name="search_label">MixIt</string>
 	<string name="search_hint">Recherche par mot clé</string>
+
+
+	<string name="now_playing_loading">Recherche de sessions aux alentours\u2026</string>
+	<string name="now_playing_no_results">Pas sessions à proches.</string>
+	<string name="now_playing_next_up">Voir quelles sessions vont démarrer.</string>
+	<string name="now_playing_enable_wifi">Cliquez ici pour activer le Wi-Fi.</string>
+
+	<plurals name="now_playing_countdown">
+	    <item quantity="zero">%2$s</item>
+	    <item quantity="one">%1$s jour, %2$s</item>
+	    <item quantity="other">%1$s jours, %2$s</item>
+	</plurals>
+
+	<string name="now_playing_before_subtitle">Compte à rebours avant MixIt!</string>
+	<string name="now_playing_after_title">A l\'année prochaine !</string>
+	<string name="now_playing_after_subtitle">Merci d\'être venu.</string>
 
 	<string name="about_text1">Basée sur l\'application Devoxx 2010 Schedule, qui a été publiée sous la licence Apache 2.0.</string>
 	<string name="about_text2">Le code source a été modifié pour la conférence MixIt par :</string>
