@@ -18,5 +18,5 @@
 <!--    <item android:state_focused="true" android:state_pressed="true" android:drawable="@drawable/title_logo_pressed"/>
     <item android:state_focused="false" android:state_pressed="true" android:drawable="@drawable/title_logo_pressed"/>
     <item android:state_focused="true" android:drawable="@drawable/title_logo_selected"/>-->
-    <item android:drawable="@drawable/mixit_logo_rgb_dark"/> <!--android:state_focused="false" android:state_pressed="false" -->
+    <item android:drawable="@drawable/logo_rgb"/> <!--android:state_focused="false" android:state_pressed="false" -->
 </selector>

@@ -50,6 +50,9 @@ public class HomeActivity extends Activity implements NotifyingAsyncQueryHandler
 	    mState = (State) getLastNonConfigurationInstance();
 	    final boolean previousState = mState != null;
 
+        // Set up handler for now playing session query.
+        mQueryHandler = new NotifyingAsyncQueryHandler(getContentResolver(), this);
+
 	    if (previousState) {
 	        // Start listening for SyncService updates again
 	        mState.mReceiver.setReceiver(this);

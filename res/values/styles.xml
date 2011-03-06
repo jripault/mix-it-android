@@ -88,7 +88,12 @@
 	<style name="TitleBarLogo">
 	    <item name="android:id">@id/title_logo</item>
 	    <item name="android:layout_width">wrap_content</item>
-	    <item name="android:layout_height">fill_parent</item>
+	    <item name="android:layout_height">wrap_content</item>
+		<item name="android:gravity">left|center_vertical</item>
+		<item name="android:paddingTop">5dip</item>
+		<item name="android:paddingBottom">5dip</item>
+		<item name="android:paddingLeft">0dip</item>
+		<item name="android:paddingRight">0dip</item>
 	    <item name="android:clickable">true</item>
 	</style>
 
