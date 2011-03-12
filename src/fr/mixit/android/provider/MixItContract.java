@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.text.format.DateUtils;
+import android.text.style.AlignmentSpan;
 import fr.mixit.android.utils.ParserUtils;
 
 /**
@@ -90,6 +91,10 @@ public class MixItContract {
 		String TAG_NAME = "tag_name";
 	}
 
+/*	interface StarredSyncColumns {
+		String STARRED_SESSION_ID = "starred_session_id";
+	}*/
+
 
 	public static final String CONTENT_AUTHORITY = "fr.mixit.android";
 
@@ -100,6 +105,7 @@ public class MixItContract {
 	private static final String PATH_SLOTS = "slots";
     private static final String PATH_TRACKS = "tracks";
 	private static final String PATH_TAGS = "tags";
+//	private static final String PATH_STARRED_SYNC = "starred_sync";
 
     private static final String PATH_WITH_NAME = "name";
 	private static final String PATH_STARRED = "starred";
@@ -448,6 +454,30 @@ public class MixItContract {
 
 	}
 
+
+/*	public static class StarredSync implements StarredSyncColumns {
+		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_STARRED_SYNC).build();
+
+		public static final String CONTENT_TYPE =
+		        "vnd.android.cursor.dir/vnd.mixit.starred_sync";
+		public static final String CONTENT_ITEM_TYPE =
+		        "vnd.android.cursor.item/vnd.mixit.starred_sync";
+
+		public static final String DEFAULT_SORT = MixItDatabase.Tables.STARRED_SYNC + "." + StarredSyncColumns.STARRED_SESSION_ID + " ASC";
+
+		public static Uri buildStarredSyncUri(String uriId) {
+		    return CONTENT_URI.buildUpon().appendPath(uriId).build();
+		}
+
+		public static String getStarredSyncId(Uri uri) {
+		    return uri.getPathSegments().get(1);
+		}
+
+		public static String generateStarredSyncId(String uri) {
+		    return ParserUtils.sanitizeId(uri);
+		}
+
+	}*/
 
 	public static class Sync implements SyncColumns, BaseColumns {
 	    public static final Uri CONTENT_URI =

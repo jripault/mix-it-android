@@ -14,6 +14,7 @@ import fr.mixit.android.Constants;
 import fr.mixit.android.R;
 import fr.mixit.android.io.*;
 import fr.mixit.android.model.RequestHash;
+import fr.mixit.android.ui.SettingsActivity;
 import fr.mixit.android.utils.NotificationUtils;
 import fr.mixit.android.utils.SyncUtils;
 import org.apache.http.client.HttpClient;
@@ -152,7 +153,7 @@ public class SyncService extends IntentService {
 	 * Should we perform a remote sync?
 	 */
 	private static boolean performRemoteSync(ContentResolver resolver, HttpClient httpClient, Intent intent, Context context) {
-	    final SharedPreferences settingsPrefs = context.getSharedPreferences("MixItScheduleSettings", MODE_PRIVATE);
+	    final SharedPreferences settingsPrefs = context.getSharedPreferences(SettingsActivity.SETTINGS_NAME, MODE_PRIVATE);
 	    final SharedPreferences syncServicePrefs = context.getSharedPreferences(SyncPrefs.MIXITSCHED_SYNC, Context.MODE_PRIVATE);
 	    final boolean onlySyncWifi = settingsPrefs.getBoolean(context.getString(R.string.sync_only_wifi_key), false);
 	    final int localVersion = syncServicePrefs.getInt(SyncPrefs.LOCAL_VERSION, VERSION_NONE);

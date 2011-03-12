@@ -28,7 +28,7 @@ public class SettingsActivity extends PreferenceActivity {
 	
 	private static final String TAG = "SettingsActivity";
 
-	public static final String SETTINGS_NAME = "DevoxxScheduleSettings";
+	public static final String SETTINGS_NAME = "MixItScheduleSettings";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

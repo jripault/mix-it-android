@@ -41,6 +41,7 @@ public class MixItDatabase extends SQLiteOpenHelper {
 		String TRACKS = "tracks";
 		String TAGS = "tags";
 		String SYNC = "sync";
+//		String STARRED_SYNC = "starred_sync";
 
 		String SESSIONS_SPEAKERS = "sessions_speakers";
 		String SESSIONS_TAGS = "sessions_tags";

@@ -39,6 +39,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import fr.mixit.android.R;
 import fr.mixit.android.provider.MixItContract;
+import fr.mixit.android.service.StarredSender;
 import fr.mixit.android.utils.FractionalTouchDelegate;
 import fr.mixit.android.utils.NotifyingAsyncQueryHandler;
 import fr.mixit.android.utils.UIUtils;
@@ -340,6 +341,7 @@ public class SessionDetailActivity extends TabActivity implements NotifyingAsync
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         final ContentValues values = new ContentValues();
         values.put(MixItContract.Sessions.STARRED, isChecked ? 1 : 0);
+	    StarredSender.getInstance().newSessionStarred(Integer.parseInt(mSessionId), isChecked);
         mHandler.startUpdate(mSessionUri, values);
     }
 

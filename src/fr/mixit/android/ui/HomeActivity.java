@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import fr.mixit.android.R;
 import fr.mixit.android.provider.MixItContract;
+import fr.mixit.android.service.StarredSender;
 import fr.mixit.android.service.SyncService;
 import fr.mixit.android.utils.DetachableResultReceiver;
 import fr.mixit.android.utils.NotifyingAsyncQueryHandler;
@@ -64,7 +65,7 @@ public class HomeActivity extends Activity implements NotifyingAsyncQueryHandler
 	        onRefreshClick(null);
 	    }
 
-
+	    StarredSender.getInstance().startStarredDispatcher(getApplicationContext());
     }
 
 	@Override
