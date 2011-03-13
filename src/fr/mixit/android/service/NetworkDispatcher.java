@@ -4,8 +4,16 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedList;
 
+import android.content.ContentResolver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import fr.mixit.android.Constants;
+import fr.mixit.android.R;
 import fr.mixit.android.model.SessionStarred;
+import fr.mixit.android.ui.SettingsActivity;
 import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;
@@ -209,4 +217,5 @@ public class NetworkDispatcher implements Dispatcher {
 		dispatcherThread.start();
 
 	}
+
 }

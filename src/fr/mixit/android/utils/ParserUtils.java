@@ -20,7 +20,11 @@
 package fr.mixit.android.utils;
 
 import android.text.format.Time;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
@@ -49,6 +53,7 @@ public class ParserUtils {
 	}
 
 	private static Time sTime = new Time();
+	private static XmlPullParserFactory sFactory;
 
     /**
      * Sanitize the given string to be {@link android.net.Uri} safe for building
@@ -70,6 +75,19 @@ public class ParserUtils {
         }
         return sSanitizePattern.matcher(input.toLowerCase()).replaceAll("");
     }
+
+	/**
+	 * Build and return a new {@link org.xmlpull.v1.XmlPullParser} with the given
+	 * {@link java.io.InputStream} assigned to it.
+	 */
+	public static XmlPullParser newPullParser(InputStream input) throws XmlPullParserException {
+	    if (sFactory == null) {
+	        sFactory = XmlPullParserFactory.newInstance();
+	    }
+	    final XmlPullParser parser = sFactory.newPullParser();
+	    parser.setInput(input, null);
+	    return parser;
+	}
 
 	/**
 	 * Parse the given string as a RFC 3339 timestamp, returning the value as

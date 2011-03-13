@@ -6,7 +6,9 @@ import android.net.NetworkInfo;
 import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
+import fr.mixit.android.R;
 import fr.mixit.android.model.SessionStarred;
+import fr.mixit.android.ui.SettingsActivity;
 
 public class StarredSender {
 
@@ -175,8 +177,7 @@ public class StarredSender {
 			return false;
 		}
 		try {
-			NetworkInfo networkinfo = connectivityManager.getActiveNetworkInfo();
-			if (networkinfo == null || !networkinfo.isAvailable()) {
+			if (!performStarredSync(mContext)) {
 				if (mDebugMode)
 					Log.d(TAG, "Network is not available at this moment");
 				maybeScheduleNextDispatch();
@@ -212,6 +213,25 @@ public class StarredSender {
 	public void stop() {
 		dispatcher.stop();
 		cancelPendingDispatches();
+	}
+
+	private static boolean performStarredSync(Context context) {
+	    final SharedPreferences settingsPrefs = context.getSharedPreferences(SettingsActivity.SETTINGS_NAME, Context.MODE_PRIVATE);
+	    final boolean onlySyncWifi = settingsPrefs.getBoolean(context.getString(R.string.sync_only_wifi_key), false);
+		final ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+		if (connectivityManager !=null) {
+			NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+			if (!onlySyncWifi && networkInfo != null && networkInfo.isAvailable() && networkInfo.isConnected()) {
+				return true;
+			}
+			else {
+				networkInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+				return (networkInfo != null && networkInfo.getState().equals(NetworkInfo.State.CONNECTED));
+			}
+		}
+
+	    return false;
 	}
 
 }

@@ -87,17 +87,15 @@ public class SyncService extends IntentService {
             final boolean localParse = localVersion < VERSION_LOCAL;
             Log.d(TAG, "found localVersion=" + localVersion + " and VERSION_LOCAL=" + VERSION_LOCAL);
             if (localParse) {
-	            //TODO integrate cache
                 // Parse values from local cache first
-/*                mLocalExecutor.execute(R.xml.search_suggest, new LocalSearchSuggestHandler());
-            	mLocalExecutor.execute(context, "cache-rooms.json", new RemoteRoomsHandler());
-            	mLocalExecutor.execute(context, "cache-presentationtypes.json", new RemoteSessionTypesHandler());
-            	mLocalExecutor.execute(context, "cache-speakers.json", new RemoteSpeakersHandler());
-            	mLocalExecutor.execute(context, "cache-presentations.json", new RemoteSessionsHandler());
-            	mLocalExecutor.execute(context, "cache-schedule.json", new RemoteScheduleHandler());
+	            mLocalExecutor.execute(context, "tracks.json", new RemoteTracksHandler());
+	            mLocalExecutor.execute(context, "tags.json", new RemoteTagsHandler());
+	            mLocalExecutor.execute(context, "slots.json", new RemoteSlotsHandler());
+	            mLocalExecutor.execute(context, "speakers.json", new RemoteSpeakersHandler());
+	            mLocalExecutor.execute(context, "sessions.json", new RemoteSessionsHandler());
 
                 // Save local parsed version
-            	syncServicePrefs.edit().putInt(SyncPrefs.LOCAL_VERSION, VERSION_LOCAL).commit();*/
+            	syncServicePrefs.edit().putInt(SyncPrefs.LOCAL_VERSION, VERSION_LOCAL).commit();
             }
             Log.d(TAG, "local sync took " + (System.currentTimeMillis() - startLocal) + "ms");
 
