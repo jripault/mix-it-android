@@ -147,7 +147,7 @@ public class SessionsActivity extends ListActivity implements NotifyingAsyncQuer
 				UIUtils.setHeaderColor(pinnedHeader, mTrackColor);
 			}
 			list.setPinnedHeaderView(pinnedHeader);
-			list.setDividerHeight(0);
+			list.setDividerHeight(1);
 			list.setOnScrollListener((SessionsAdapter) mAdapter);
     	}
     }
