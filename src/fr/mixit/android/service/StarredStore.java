@@ -14,7 +14,5 @@ interface StarredStore {
 
 	public abstract int getNumStoredSessionStarreds();
 
-	public abstract int getStoreId();
-
 	public abstract void closeDataBase();
 }

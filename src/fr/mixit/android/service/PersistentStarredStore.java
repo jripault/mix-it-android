@@ -44,10 +44,6 @@ class PersistentStarredStore implements StarredStore {
 		public DataBaseHelper(Context context) {
 			super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		}
-
-		public DataBaseHelper(Context context, String s) {
-			super(context, s, null, DATABASE_VERSION);
-		}
 	}
 
 	private static final int MAX_EVENTS = 1000;
@@ -68,7 +64,6 @@ class PersistentStarredStore implements StarredStore {
 	private static final String ST_EVENT_ID_EQUAL = "event_id=";
 
 	private DataBaseHelper databaseHelper;
-	private int storeId;
 
 	private int numStoredEvents;
 	private SQLiteStatement compiledCountStatement;
@@ -122,7 +117,6 @@ class PersistentStarredStore implements StarredStore {
 				if (mDebugMode) {
 					Log.d(TAG, "get " + eventId + " : sessionid : " + sessionId + " - starredStatus : " + starredStatus);
 				}
-				//cursor.getLong(cursor.getColumnIndex(ST_EVENT_ID));
 			}
 
 			if (cursor != null) {
@@ -141,7 +135,7 @@ class PersistentStarredStore implements StarredStore {
 				cursor.close();
 			}
 		}
-		return (SessionStarred[]) arraylist.toArray(new SessionStarred[arraylist.size()]);
+		return arraylist.toArray(new SessionStarred[arraylist.size()]);
 	}
 
 	public void putSessionStarred(SessionStarred sessionStarred) {
@@ -169,8 +163,7 @@ class PersistentStarredStore implements StarredStore {
 						ST_SQL_EVENT_ID_DESC, null);
 				cursor.moveToPosition(0);
 				long l1 = cursor.getLong(0);
-				Log.d("PersistentStarredStore/putSessionStarred",
-						(new StringBuilder()).append(ST_SQL_ROW_ID).append(l).append(ST_SQL_EVENT_ID).append(l1).toString());
+				Log.d(TAG, (new StringBuilder("putSessionStarred")).append(ST_SQL_ROW_ID).append(l).append(ST_SQL_EVENT_ID).append(l1).toString());
 				cursor.close();
 
 				sqlitedatabase.setTransactionSuccessful();
@@ -206,10 +199,6 @@ class PersistentStarredStore implements StarredStore {
 		}
 		return 0;
 
-	}
-
-	public int getStoreId() {
-		return storeId;
 	}
 
 	@Override

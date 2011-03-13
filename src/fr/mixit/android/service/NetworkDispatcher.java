@@ -3,12 +3,10 @@ package fr.mixit.android.service;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedList;
-import java.util.Locale;
 
 import fr.mixit.android.Constants;
 import fr.mixit.android.model.SessionStarred;
 import org.apache.http.HttpException;
-import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
@@ -16,7 +14,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
@@ -26,9 +23,6 @@ public class NetworkDispatcher implements Dispatcher {
 	private static final String TAG = "StarredNetworkDispatcher";
 	private static final boolean mDebugMode = true;
 
-	private static final String MIXIT_URI = "http://mix-it.fr/";
-	private static final HttpHost MIXIT_HOST = new HttpHost(MIXIT_URI, 80);
-
 	private static final int MAX_EVENTS_PER_PIPELINE = 30;
 	private static final int MAX_SEQUENTIAL_REQUESTS = 5;
 	private static final long MIN_RETRY_INTERVAL = 2L;
@@ -36,17 +30,9 @@ public class NetworkDispatcher implements Dispatcher {
 	private static DispatcherThread.RequesterCallbacks mRequesterCallbacks;
 
 	private static class DispatcherThread extends HandlerThread {
-		private class RequesterCallbacks implements PipelinedRequester.Callbacks {
+		private class RequesterCallbacks {
 
 			final DispatcherThread mDispatcherThread;
-
-			public void pipelineModeChanged(boolean flag) {
-				if (flag) {
-					maxEventsPerRequest = MAX_EVENTS_PER_PIPELINE;
-				} else {
-					maxEventsPerRequest = 1;
-				}
-			}
 
 			public void requestSent() {
 				if (currentTask == null) {
@@ -71,8 +57,6 @@ public class NetworkDispatcher implements Dispatcher {
 		private class AsyncDispatchTask implements Runnable {
 
 			private final LinkedList<SessionStarred> sessionStarreds = new LinkedList<SessionStarred>();
-
-//			final DispatcherThread this$0;
 
 			public void run() {
 				currentTask = this;
@@ -120,8 +104,8 @@ public class NetworkDispatcher implements Dispatcher {
 
 				int lastStatusCode;
 
-				for (int i = sessionStarreds.size() - 1; i >= 0 && i > sessionStarreds.size() - 1 - maxEventsPerRequest; i--) {
-					SessionStarred sessionStarred = sessionStarreds.get(i);
+				for (int i = 0; i < sessionStarreds.size() && i < maxEventsPerRequest; i++) {
+					SessionStarred sessionStarred = sessionStarreds.get(0);
 
 					if (mDebugMode)
 						Log.d(TAG, "trying to send request[" + sessionStarred.getIdSession() + "] :" + sessionStarred.isSessionStarred());
@@ -158,15 +142,13 @@ public class NetworkDispatcher implements Dispatcher {
 						Log.e(TAG, "error sending request", e);
 					}
 				}
-				sessionStarreds.clear();
 			}
 
 			public SessionStarred removeNextSessionStarred() {
-				return (SessionStarred) sessionStarreds.pollLast();
+				return sessionStarreds.poll();
 			}
 
 			public AsyncDispatchTask(SessionStarred sessionStarred[]) {
-//				this$0 = DispatcherThread.this;
 				Collections.addAll(sessionStarreds, sessionStarred);
 			}
 		}
@@ -189,10 +171,6 @@ public class NetworkDispatcher implements Dispatcher {
 		}
 
 		private DispatcherThread(Dispatcher.Callbacks callbacks1) {
-			this(callbacks1, new PipelinedRequester(MIXIT_HOST));
-		}
-
-		private DispatcherThread(Dispatcher.Callbacks callbacks1, PipelinedRequester pipelinedrequester) {
 			super("DispatcherThread");
 			maxEventsPerRequest = MAX_EVENTS_PER_PIPELINE;
 			currentTask = null;

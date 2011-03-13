@@ -1,34 +1,17 @@
 package fr.mixit.android.service;
 
-import android.app.IntentService;
 import android.content.*;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
-import android.os.RemoteException;
 import android.provider.Settings;
 import android.util.Log;
-import fr.mixit.android.R;
 import fr.mixit.android.model.SessionStarred;
-import fr.mixit.android.provider.MixItContract;
-import fr.mixit.android.ui.SettingsActivity;
-import fr.mixit.android.utils.Lists;
-import fr.mixit.android.utils.SyncUtils;
-import org.apache.http.client.HttpClient;
 
-import java.util.ArrayList;
-
-/**
- * Created by mathieu
- * Date: 3/6/11
- * Time: 7:49 PM
- */
 public class StarredSender {
 
 	private static final boolean mDebugMode = true;
 	private static final String TAG = "StarredSender";
-
-//	private ContentResolver mResolver;
 
 	private Handler handler;
 	final class DispatcherCallbacks implements Dispatcher.Callbacks {
@@ -46,13 +29,12 @@ public class StarredSender {
 		}
 
 		DispatcherCallbacks() {
-
 		}
 	}
 
 	private static StarredSender mStarredSender;
 	private Context mContext;
-	private ConnectivityManager connetivityManager;
+	private ConnectivityManager connectivityManager;
 	private int dispatchPeriod;
 	private StarredStore starredStore;
 	private Dispatcher dispatcher;
@@ -64,7 +46,6 @@ public class StarredSender {
 
 	private StarredSender() {
 	    super();
-//		mResolver = context.getContentResolver();
 
 		dispatchRunner = new Runnable() {
 
@@ -83,21 +64,6 @@ public class StarredSender {
 		return mStarredSender;
 	}
 
-
-	/**
-	 * Are we connected to a WiFi network?
-	 */
-	private static boolean isWifiConnected(Context context) {
-		final ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-		if (connectivityManager != null) {
-			NetworkInfo networkInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-			return (networkInfo != null && networkInfo.getState().equals(NetworkInfo.State.CONNECTED));
-		}
-
-		return false;
-	}
-
 	public void startStarredDispatcher(Context context) {
 
 		if (mDebugMode)
@@ -109,12 +75,12 @@ public class StarredSender {
 
 		dispatcher = new NetworkDispatcher();
 
-		Dispatcher.Callbacks callbacks = ((Dispatcher.Callbacks) (new DispatcherCallbacks()));
+		final Dispatcher.Callbacks callbacks = new DispatcherCallbacks();
 
 		dispatcher.init(callbacks);
 		dispatcherIsBusy = false;
-		if (connetivityManager == null) {
-			connetivityManager = (ConnectivityManager) mContext.getSystemService("connectivity");
+		if (connectivityManager == null) {
+			connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
 		}
 		if (handler == null) {
 			handler = new Handler(context.getMainLooper());
@@ -132,7 +98,6 @@ public class StarredSender {
 	}
 
 	public String initUserId() {
-
 		// Get userId
 		String userId = Settings.Secure.getString(mContext.getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
@@ -140,8 +105,7 @@ public class StarredSender {
 		if (userId == null)
 			userId = "EmulatorUserId";
 
-
-		// TODO : make a hash
+		// TODO : make a hash -> it seems it's already hashed
 		return userId;
 	}
 
@@ -155,18 +119,6 @@ public class StarredSender {
 		}
 		starredStore.putSessionStarred(new SessionStarred(sessionId, state));
 		resetPowerSaveMode();
-/*		ContentProviderOperation.Builder builder = ContentProviderOperation.newInsert(MixItContract.StarredSync.CONTENT_URI);
-		builder.withValue(MixItContract.StarredSync.STARRED_SESSION_ID, sessionId);
-		final ArrayList<ContentProviderOperation> batch = Lists.newArrayList();
-		batch.add(builder.build());
-		try {
-			mResolver.applyBatch(MixItContract.CONTENT_AUTHORITY, batch);
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		} catch (OperationApplicationException e) {
-			e.printStackTrace();
-		}*/
-
 	}
 
 	Dispatcher getDispatcher() {
@@ -186,15 +138,16 @@ public class StarredSender {
 
 	private void maybeScheduleNextDispatch() {
 		if (dispatchPeriod < 0) {
-			if (true)
+			if (mDebugMode)
 				Log.d(TAG, "maybeScheduleNextDispatch() dispatchPeriod < 0");
 
 			return;
 		} else {
-			if (true)
+			if (mDebugMode)
 				Log.d(TAG, "maybeScheduleNextDispatch() dispatchPeriod >= 0");
-			if (!handler.postDelayed(dispatchRunner, dispatchPeriod * 1000))
-				;
+			if (!handler.postDelayed(dispatchRunner, dispatchPeriod * 1000) && mDebugMode) {
+				Log.d(TAG, "maybeScheduleNextDispatch() impossible to reschedule the dispatcher");
+			}
 			return;
 		}
 	}
@@ -222,7 +175,7 @@ public class StarredSender {
 			return false;
 		}
 		try {
-			NetworkInfo networkinfo = connetivityManager.getActiveNetworkInfo();
+			NetworkInfo networkinfo = connectivityManager.getActiveNetworkInfo();
 			if (networkinfo == null || !networkinfo.isAvailable()) {
 				if (mDebugMode)
 					Log.d(TAG, "Network is not available at this moment");

@@ -1,10 +1,5 @@
 package fr.mixit.android;
 
-/**
- * Created by mathieu
- * Date: 1/30/11
- * Time: 10:28 PM
- */
 public class Constants {
 
 	public static final String REST_BASE_URL = "http://mix-it.fr/";
