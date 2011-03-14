@@ -49,36 +49,42 @@
 			    android:layout_height="wrap_content"
 			    android:paddingTop="2dip"
 			    style="@style/SessionSubtitle" />
-			<TextView
-			    android:id="@+id/speaker_linkedin"
-			    android:paddingLeft="5dp"
-			    android:layout_below="@id/speaker_company"
-			    android:layout_toRightOf="@id/speaker_image"
-			    android:layout_width="fill_parent"
-			    android:layout_height="wrap_content"
-			    android:paddingTop="2dip"
-			    android:autoLink="web"
-			    style="@style/SessionSubtitle" />
-			<TextView
-			    android:id="@+id/speaker_twitter"
-			    android:paddingLeft="5dp"
-			    android:layout_below="@id/speaker_linkedin"
-			    android:layout_toRightOf="@id/speaker_image"
-			    android:layout_width="fill_parent"
-			    android:layout_height="wrap_content"
-			    android:paddingTop="2dip"
-			    android:autoLink="web"
-			    style="@style/SessionSubtitle" />
-			<TextView
-			    android:id="@+id/speaker_blog"
-			    android:paddingLeft="5dp"
-			    android:layout_below="@id/speaker_twitter"
-			    android:layout_toRightOf="@id/speaker_image"
-			    android:layout_width="fill_parent"
-			    android:layout_height="wrap_content"
-			    android:paddingTop="2dip"
-			    android:autoLink="web"
-			    style="@style/SessionSubtitle" />
+			<LinearLayout
+				android:orientation="horizontal"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+			    android:layout_below="@id/speaker_company" android:layout_toRightOf="@id/speaker_image"
+			    android:layout_marginLeft="10dp"
+			    >
+				<ImageButton
+				    android:id="@+id/speaker_linkedin"
+				    android:layout_marginLeft="10dp"
+				    android:layout_marginRight="10dp"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:paddingTop="2dip"
+					android:background="@drawable/linkedin"/>
+				<!--android:autoLink="web"
+				    style="@style/SessionSubtitle"-->
+				<ImageButton
+				    android:id="@+id/speaker_twitter"
+				    android:layout_marginLeft="10dp"
+				    android:layout_marginRight="10dp"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:paddingTop="2dip"
+					android:background="@drawable/twitter"/>
+				<!--android:autoLink="web"
+				    style="@style/SessionSubtitle"-->
+				<ImageButton
+				    android:id="@+id/speaker_blog"
+				    android:layout_marginLeft="10dp"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:paddingTop="2dip"
+					android:background="@drawable/blogger"/>
+				<!--android:autoLink="web"
+				    style="@style/SessionSubtitle"-->
+			</LinearLayout>
 		</RelativeLayout>
 
            <TextView

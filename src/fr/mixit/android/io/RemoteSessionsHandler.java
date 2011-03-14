@@ -88,7 +88,7 @@ public class RemoteSessionsHandler extends JSONHandler {
 				    if (session.has("room")) {
 					    String room = session.getString("room");
 					    if (room == null || room.length() == 0) {
-						    room = "Missing";
+						    room = "";
 					    }
 				        builder.withValue(MixItContract.Sessions.ROOM, room);
 				    }

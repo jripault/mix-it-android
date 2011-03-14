@@ -166,9 +166,12 @@ public class UIUtils {
 	public static String formatSessionSubtitle(long slotStart, long slotEnd, String roomName, Context context) {
 	    TimeZone.setDefault(CONFERENCE_TIME_ZONE);
 
-	    final CharSequence timeString = DateUtils.formatDateRange(context, slotStart, slotEnd, TIME_FLAGS);
+		CharSequence retour = DateUtils.formatDateRange(context, slotStart, slotEnd, TIME_FLAGS);
+		if (roomName != null && roomName.length() > 0) {
+			retour = context.getString(R.string.session_subtitle, retour, roomName);
+		}
 
-	    return context.getString(R.string.session_subtitle, timeString, roomName);
+	    return retour.toString();
 	}
 
 	public static void setSessionTitleColor(long blockStart, long blockEnd, TextView title,

@@ -67,7 +67,7 @@
 	<string name="settings_notify_new_sessions">Nouvelles sessions</string>
 	<string name="settings_notify_changed_starred_sessions">Changement favoris</string>
 	<string name="settings_visualize_parallel_starred_sessions">Favoris en Parallèle</string>
-	<string name="settings_visualize_parallel_starred_sessions_summary">Mettre en surbrillant les sessions en favoris qui se déroulent qu\'une autre session en faovris.</string>
+	<string name="settings_visualize_parallel_starred_sessions_summary">Mettre en surbrillant les sessions en favoris qui se déroulent qu\'une autre session en favoris.</string>
 	<string name="gray_out_passed_sessions">Mettre en gris les sessions</string>
 	<string name="gray_out_passed_sessions_summary">Mettre en gris les sessions déjà déroulée.</string>
 	<string name="settings_focus_session_during_conference">Aller à la session</string>

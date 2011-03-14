@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Locale;
 
 /**
  * Created by mathieu
@@ -26,7 +27,7 @@ import java.util.HashSet;
 public class RemoteSlotsHandler extends JSONHandler {
 
 	private static final String DATE_FORMAT = "MMM d',' yyyy h':'mm':'ss aa";// like : Apr 5, 2011 9:00:00 AM
-	private static final SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+	private static final SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT, Locale.UK);
 	private static final String TAG = "SlotsHandler";
 
 	public RemoteSlotsHandler() {

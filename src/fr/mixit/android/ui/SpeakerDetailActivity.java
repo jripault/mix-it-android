@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
+import android.widget.ImageButton;
 import fr.mixit.android.R;
 import fr.mixit.android.provider.MixItContract;
 import fr.mixit.android.ui.widget.SpeakerImageView;
@@ -65,9 +66,12 @@ public class SpeakerDetailActivity extends TabActivity implements NotifyingAsync
     
     private TextView mName;
     private TextView mCompany;
-    private TextView mLinkedIn;
-    private TextView mTwitter;
-    private TextView mBlog;
+    private ImageButton mLinkedIn;
+    private ImageButton mTwitter;
+    private ImageButton mBlog;
+    private String mLinkedInURL;
+    private String mTwitterURL;
+    private String mBlogURL;
     private TextView mBio;
     private SpeakerImageView mImage;
 
@@ -86,9 +90,42 @@ public class SpeakerDetailActivity extends TabActivity implements NotifyingAsync
         
         mName = (TextView) findViewById(R.id.speaker_name);
 		mCompany = (TextView) findViewById(R.id.speaker_company);
-		mLinkedIn = (TextView) findViewById(R.id.speaker_linkedin);
-		mTwitter = (TextView) findViewById(R.id.speaker_twitter);
-		mBlog = (TextView) findViewById(R.id.speaker_blog);
+		mLinkedIn = (ImageButton) findViewById(R.id.speaker_linkedin);
+		mLinkedIn.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				if (mLinkedInURL != null && mLinkedInURL.length() > 0) {
+					Uri uri= Uri.parse(mLinkedInURL);
+                    Intent intent=new Intent(Intent.ACTION_VIEW , uri);
+                    startActivity(intent);
+				}
+			}
+		});
+		mTwitter = (ImageButton) findViewById(R.id.speaker_twitter);
+		mTwitter.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				if (mTwitterURL != null && mTwitterURL.length() > 0) {
+					Uri uri= Uri.parse(mTwitterURL);
+                    Intent intent=new Intent(Intent.ACTION_VIEW , uri);
+                    startActivity(intent);
+				}
+			}
+		});
+		mBlog = (ImageButton) findViewById(R.id.speaker_blog);
+		mBlog.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				if (mBlogURL != null && mBlogURL.length() > 0) {
+					Uri uri= Uri.parse(mBlogURL);
+                    Intent intent=new Intent(Intent.ACTION_VIEW , uri);
+                    startActivity(intent);
+				}
+			}
+		});
         mBio = (TextView) findViewById(R.id.speaker_bio);
         mImage = (SpeakerImageView) findViewById(R.id.speaker_image);
         
@@ -143,9 +180,12 @@ public class SpeakerDetailActivity extends TabActivity implements NotifyingAsync
 
             mName.setText(cursor.getString(SpeakersQuery.LAST_NAME) + " " + cursor.getString(SpeakersQuery.FIRST_NAME));
 	        mCompany.setText(cursor.getString(SpeakersQuery.COMPANY));
-	        mLinkedIn.setText(cursor.getString(SpeakersQuery.LINKEDIN));
-	        mTwitter.setText(cursor.getString(SpeakersQuery.TWITTER));
-	        mBlog.setText(cursor.getString(SpeakersQuery.BLOG));
+            mLinkedInURL = cursor.getString(SpeakersQuery.LINKEDIN);
+            mTwitterURL = cursor.getString(SpeakersQuery.TWITTER);
+            mBlogURL = cursor.getString(SpeakersQuery.BLOG);
+	        mLinkedIn.setVisibility(mLinkedInURL != null && mLinkedInURL.length() > 0 ? View.VISIBLE : View.GONE);
+	        mTwitter.setVisibility(mTwitterURL != null && mTwitterURL.length() > 0 ? View.VISIBLE : View.GONE);
+	        mBlog.setVisibility(mBlogURL != null && mBlogURL.length() > 0 ? View.VISIBLE : View.GONE);
             mBio.setText(cursor.getString(SpeakersQuery.BIO));
 
             Bitmap speakerImage = loadImageFromCache();
