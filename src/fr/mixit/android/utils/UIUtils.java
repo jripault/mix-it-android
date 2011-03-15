@@ -166,9 +166,20 @@ public class UIUtils {
 	public static String formatSessionSubtitle(long slotStart, long slotEnd, String roomName, Context context) {
 	    TimeZone.setDefault(CONFERENCE_TIME_ZONE);
 
-		CharSequence retour = DateUtils.formatDateRange(context, slotStart, slotEnd, TIME_FLAGS);
-		if (roomName != null && roomName.length() > 0) {
-			retour = context.getString(R.string.session_subtitle, retour, roomName);
+		CharSequence retour;
+		if (slotStart >= CONFERENCE_START_MILLIS && slotEnd <= CONFERENCE_END_MILLIS) {
+			retour = DateUtils.formatDateRange(context, slotStart, slotEnd, TIME_FLAGS);
+			if (roomName != null && roomName.length() > 0) {
+				retour = context.getString(R.string.session_subtitle, retour, roomName);
+			}
+		}
+		else {
+			if (roomName != null && roomName.length() > 0) {
+				retour = roomName;
+			}
+			else {
+				retour = "";
+			}
 		}
 
 	    return retour.toString();

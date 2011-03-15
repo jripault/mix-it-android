@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:textSize="@dimen/text_size_large"
-            android:textColor="@color/foreground1"
+            android:textColor="@color/mixit_blue"
             android:singleLine="true"
             android:ellipsize="end" />
         <TextView
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="3dip"
             android:paddingBottom="3dip"
-            android:textColor="@color/foreground2"
+            android:textColor="@color/mixit_blue"
             android:textSize="@dimen/text_size_small"
             android:text="@string/now_playing_before_subtitle"
             android:singleLine="true"

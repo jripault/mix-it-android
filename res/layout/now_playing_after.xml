@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:textSize="@dimen/text_size_large"
-            android:textColor="@color/foreground1"
+            android:textColor="@color/mixit_blue"
             android:text="@string/now_playing_after_title"
             android:maxLines="2"
             android:ellipsize="end" />
@@ -46,7 +46,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingTop="3dip"
-            android:textColor="@color/foreground2"
+            android:textColor="@color/mixit_blue"
             android:textSize="@dimen/text_size_small"
             android:text="@string/now_playing_after_subtitle"
             android:singleLine="true"

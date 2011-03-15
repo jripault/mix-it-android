@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:textSize="@dimen/text_size_medium"
-            android:textColor="@color/foreground1"
+            android:textColor="@color/mixit_blue"
             android:maxLines="2"
             android:ellipsize="end" />
         <TextView
@@ -51,7 +51,7 @@
             android:textSize="@dimen/text_size_small"
             android:singleLine="true"
             android:ellipsize="end"
-            android:textColor="@color/foreground2" />
+            android:textColor="@color/mixit_blue" />
     </LinearLayout>
     <View
     	android:id="@+id/separator_now_playing_more"

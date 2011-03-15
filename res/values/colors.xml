@@ -29,6 +29,7 @@
     <color name="background2">#ff282828</color>
     <color name="background3">#ffaaaaaa</color>
     <color name="title_separator">#40ffffff</color>
+	<color name="mixit_blue">#00adee</color>
     
     <!--color name="header_background">#ffefefef</color-->
     <color name="actionbar">#ffffffff</color>

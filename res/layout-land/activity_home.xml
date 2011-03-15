@@ -16,10 +16,6 @@
 -->
 
 <!--
-	Adapted by Peter Kuterna to support the Devoxx conference.
--->
-
-<!--
 	Adapted by Mathieu Calba to support the MixIt conference.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -74,7 +70,7 @@
                 android:text="@string/btn_sessions"
                 android:drawableTop="@drawable/home_btn_sessions"/>
         </LinearLayout>
-
+    
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
@@ -93,25 +89,4 @@
                 <!-- TODO: refactor home_btn_speakers drawable name -->
         </LinearLayout>
     </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/now_playing_loading"
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/now_playing_height"
-        android:orientation="horizontal"
-        android:background="@color/title_background"
-        android:gravity="center">
-        <ProgressBar
-            style="?android:attr/progressBarStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingRight="6dip"
-            android:indeterminate="true"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_small"
-            android:text="@string/now_playing_loading"/>
-    </LinearLayout>
-
 </LinearLayout>
