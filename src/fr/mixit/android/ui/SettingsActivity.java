@@ -19,7 +19,9 @@ package fr.mixit.android.ui;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import fr.mixit.android.R;
+import fr.mixit.android.service.StarredSender;
 
 /**
  * {@link android.preference.PreferenceActivity} to handle the application settings.
@@ -29,7 +31,8 @@ public class SettingsActivity extends PreferenceActivity {
 	private static final String TAG = "SettingsActivity";
 
 	public static final String SETTINGS_NAME = "MixItScheduleSettings";
-	
+	private final GoogleAnalyticsTracker tracker = GoogleAnalyticsTracker.getInstance();
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -39,6 +42,18 @@ public class SettingsActivity extends PreferenceActivity {
 		preferenceManager.setSharedPreferencesMode(MODE_PRIVATE);
 		
 		addPreferencesFromResource(R.xml.preferences);
+	}
+
+	protected void onResume() {
+		super.onResume();
+		tracker.trackPageView("/Settings");
+
+		StarredSender.getInstance().startStarredDispatcher(getApplicationContext());
+	}
+
+	protected void onPause() {
+		super.onPause();
+		StarredSender.getInstance().stop();
 	}
 
 }

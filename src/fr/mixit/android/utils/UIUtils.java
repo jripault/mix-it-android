@@ -275,4 +275,11 @@ public class UIUtils {
 	    return list.size() > 0;
 	}
 
+	private static float sScale = 0;
+	public static int dipToPixel(Context context, int dip) {
+		if (sScale == 0)
+		    sScale = context.getResources().getDisplayMetrics().density;
+		return (int) (dip * sScale + 0.5f);
+	}
+
 }

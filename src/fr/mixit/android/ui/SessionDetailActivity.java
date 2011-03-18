@@ -37,6 +37,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import fr.mixit.android.R;
 import fr.mixit.android.provider.MixItContract;
 import fr.mixit.android.service.StarredSender;
@@ -82,6 +83,7 @@ public class SessionDetailActivity extends TabActivity implements NotifyingAsync
     private boolean mSpeakersCursor = false;
 	private boolean mTagsCursor = false;
     private boolean mHasSummaryContent = false;
+	private final GoogleAnalyticsTracker tracker = GoogleAnalyticsTracker.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +121,18 @@ public class SessionDetailActivity extends TabActivity implements NotifyingAsync
         mHandler.startQuery(SpeakersQuery._TOKEN, speakersUri, SpeakersQuery.PROJECTION);
 	    mHandler.startQuery(TagsQuery._TOKEN, tagsUri, TagsQuery.PROJECTION);
     }
+
+	protected void onResume() {
+		super.onResume();
+		tracker.trackPageView("/SessionDetail");
+
+		StarredSender.getInstance().startStarredDispatcher(getApplicationContext());
+	}
+
+	protected void onPause() {
+		super.onPause();
+		StarredSender.getInstance().stop();
+	}
 
     /** Build and add "summary" tab. */
     private void setupSummaryTab() {
@@ -189,6 +203,9 @@ public class SessionDetailActivity extends TabActivity implements NotifyingAsync
             mTitleString = cursor.getString(SessionsQuery.TITLE);
             mTitle.setText(mTitleString);
             mSubtitle.setText(subtitle);
+
+	        tracker.setCustomVar(2, "SessionTitle", mTitleString);
+	        tracker.trackPageView("/SessionDetail");
 
             mRoomNameLowercase = cursor.getString(SessionsQuery.ROOM).toLowerCase();
 

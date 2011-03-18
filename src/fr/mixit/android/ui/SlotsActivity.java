@@ -36,8 +36,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import fr.mixit.android.R;
 import fr.mixit.android.provider.MixItContract;
+import fr.mixit.android.service.StarredSender;
 import fr.mixit.android.ui.widget.SlotView;
 import fr.mixit.android.ui.widget.SlotsLayout;
 import fr.mixit.android.utils.NotifyingAsyncQueryHandler;
@@ -68,6 +70,7 @@ public class SlotsActivity extends Activity implements NotifyingAsyncQueryHandle
     private NotifyingAsyncQueryHandler mHandler;
 
     private static final int DISABLED_SLOT_ALPHA = 160;
+	private final GoogleAnalyticsTracker tracker = GoogleAnalyticsTracker.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,11 +114,14 @@ public class SlotsActivity extends Activity implements NotifyingAsyncQueryHandle
                 updateNowView(true);
             }
         });
-    }
+	    tracker.trackPageView("/Schedule");
 
-    @Override
-    protected void onPause() {
-        super.onPause();
+		StarredSender.getInstance().startStarredDispatcher(getApplicationContext());
+	}
+
+	protected void onPause() {
+		super.onPause();
+		StarredSender.getInstance().stop();
         unregisterReceiver(mReceiver);
     }
 
@@ -127,9 +133,13 @@ public class SlotsActivity extends Activity implements NotifyingAsyncQueryHandle
         try {
         	while (cursor.moveToNext()) {
                 final String type = cursor.getString(SlotsQuery.SLOT_TYPE);
-                final Integer column = ParserUtils.sTypeColumnMap.get(type);
-                // TODO: place random slots at bottom of entire layout
-                if (column == null) continue;
+/*		        final Integer column = ParserUtils.sTypeColumnMap.get(type);
+		        // TODO: place random slots at bottom of entire layout
+		        if (column == null) continue;*/
+		        final int column = 0;
+		        final Integer color = ParserUtils.sTypeColumnMap.get(type);
+		        // TODO: place random slots at bottom of entire layout
+		        if (color == null) continue;
 
                 final String slotId = cursor.getString(SlotsQuery.SLOT_ID);
                 final String title = cursor.getString(SlotsQuery.SLOT_TYPE);//SLOT_TITLE
@@ -138,7 +148,7 @@ public class SlotsActivity extends Activity implements NotifyingAsyncQueryHandle
                 final boolean containsStarred = cursor.getInt(SlotsQuery.CONTAINS_STARRED) != 0;
 
                 final SlotView slotView = new SlotView(this, slotId, title, start, end,
-                        containsStarred, column);
+                        containsStarred, column, color);
 
                 final int sessionsCount = cursor.getInt(SlotsQuery.SESSIONS_COUNT);
                 if (sessionsCount > 0) {

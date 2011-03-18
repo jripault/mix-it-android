@@ -20,7 +20,9 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import fr.mixit.android.R;
+import fr.mixit.android.service.StarredSender;
 import fr.mixit.android.utils.UIUtils;
 
 /**
@@ -29,6 +31,7 @@ import fr.mixit.android.utils.UIUtils;
 public class AboutActivity extends Activity {
 
 	private static final String TAG = "AboutActivity";
+	private final GoogleAnalyticsTracker tracker = GoogleAnalyticsTracker.getInstance();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,18 @@ public class AboutActivity extends Activity {
 		
 		final TextView version = (TextView) findViewById(R.id.about_version);
 		version.setText(getString(R.string.about_text5, UIUtils.getAppVersionName(this, getPackageName())));
+	}
+
+	protected void onResume() {
+		super.onResume();
+		tracker.trackPageView("/About");
+
+		StarredSender.getInstance().startStarredDispatcher(getApplicationContext());
+	}
+
+	protected void onPause() {
+		super.onPause();
+		StarredSender.getInstance().stop();
 	}
 
     public void onHomeClick(View v) {

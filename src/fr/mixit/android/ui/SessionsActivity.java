@@ -41,8 +41,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import android.widget.AbsListView.OnScrollListener;
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import fr.mixit.android.R;
 import fr.mixit.android.provider.MixItContract;
+import fr.mixit.android.service.StarredSender;
 import fr.mixit.android.ui.widget.PinnedHeaderListView;
 import fr.mixit.android.utils.NotifyingAsyncQueryHandler;
 import fr.mixit.android.utils.UIUtils;
@@ -69,6 +71,8 @@ public class SessionsActivity extends ListActivity implements NotifyingAsyncQuer
 
     private int mTrackColor= -1;
     private int mPinnedHeaderBackgroundColor;
+
+	private final GoogleAnalyticsTracker tracker = GoogleAnalyticsTracker.getInstance();
 
 	// TODO change to sort by block start
     private static final String SESSIONS_SORT = MixItContract.Sessions.TITLE/*BLOCK_START*/ + " ASC";/*"," + Rooms.NAME + " ASC";*/
@@ -204,12 +208,19 @@ public class SessionsActivity extends ListActivity implements NotifyingAsyncQuer
     protected void onResume() {
         super.onResume();
         mMessageQueueHandler.post(mRefreshSessionsRunnable);
-    }
+	    final Intent intent = getIntent();
+	    final Uri sessionsUri = intent.getData();
+	    if (!MixItContract.Sessions.isSearchUri(sessionsUri)) {
+			tracker.trackPageView("/SessionsList");
+	    }
 
-    @Override
-    protected void onPause() {
+		StarredSender.getInstance().startStarredDispatcher(getApplicationContext());
+	}
+
+	protected void onPause() {
+		super.onPause();
+		StarredSender.getInstance().stop();
         mMessageQueueHandler.removeCallbacks(mRefreshSessionsRunnable);
-        super.onPause();
     }
 
     /** {@inheritDoc} */

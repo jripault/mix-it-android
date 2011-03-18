@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TabHost;
 import android.widget.TextView;
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import fr.mixit.android.R;
 import fr.mixit.android.provider.MixItContract;
 import fr.mixit.android.utils.UIUtils;
@@ -34,7 +35,7 @@ public class SessionsOverviewActivity extends TabActivity {
     public static final String TAG_TRACK = "track";
 	public static final String TAG_TAG = "tag";
     public static final String TAG_ALL = "all";
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

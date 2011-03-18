@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import fr.mixit.android.R;
 import fr.mixit.android.provider.MixItContract;
 import fr.mixit.android.service.StarredSender;
@@ -41,6 +42,8 @@ public class HomeActivity extends Activity implements NotifyingAsyncQueryHandler
 	private TextView mCountdownTextView;
 	private View mNowPlayingLoadingView;
 
+	private GoogleAnalyticsTracker tracker;
+
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +69,9 @@ public class HomeActivity extends Activity implements NotifyingAsyncQueryHandler
 	    }
 
 	    StarredSender.getInstance().startStarredDispatcher(getApplicationContext());
+
+        tracker = GoogleAnalyticsTracker.getInstance();
+        tracker.start("UA-8046496-4", 30, this);
     }
 
 	@Override
@@ -85,7 +91,15 @@ public class HomeActivity extends Activity implements NotifyingAsyncQueryHandler
         } else if (mState.mNoResults) {
             showNowPlayingNoResults();
         }
+
+        tracker.trackPageView("/Home");
     }
+
+	protected void onDestroy() {
+		super.onDestroy();
+		tracker.stop();
+		StarredSender.getInstance().stop();
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

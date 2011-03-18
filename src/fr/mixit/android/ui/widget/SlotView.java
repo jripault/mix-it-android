@@ -20,6 +20,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
+import android.view.Gravity;
 import android.widget.Button;
 import fr.mixit.android.R;
 
@@ -35,9 +36,10 @@ public class SlotView extends Button {
     private final long mEndTime;
     private final boolean mContainsStarred;
     private final int mColumn;
+    private final int mColor;
 
     public SlotView(Context context, String slotId, String title, long startTime,
-                    long endTime, boolean containsStarred, int column) {
+                    long endTime, boolean containsStarred, int column, int color) {
         super(context);
 
         mSlotId = slotId;
@@ -46,13 +48,14 @@ public class SlotView extends Button {
         mEndTime = endTime;
         mContainsStarred = containsStarred;
         mColumn = column;
+	    mColor = color;
 
         setText(mTitle);
 
         // TODO: turn into color state list with layers?
         int textColor = -1;
         int accentColor = -1;
-        switch (mColumn) {
+        switch (color) {
             case 0:
                 // blue
                 textColor = Color.WHITE;

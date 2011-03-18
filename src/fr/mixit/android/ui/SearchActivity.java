@@ -27,8 +27,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TabHost;
 import android.widget.TextView;
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import fr.mixit.android.R;
 import fr.mixit.android.provider.MixItContract;
+import fr.mixit.android.service.StarredSender;
 import fr.mixit.android.utils.UIUtils;
 
 public class SearchActivity extends TabActivity {
@@ -37,6 +39,7 @@ public class SearchActivity extends TabActivity {
     public static final String TAG_SPEAKERS = "speakers";
 
     private String mQuery;
+	private final GoogleAnalyticsTracker tracker = GoogleAnalyticsTracker.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +48,19 @@ public class SearchActivity extends TabActivity {
 
         onNewIntent(getIntent());
     }
+
+	protected void onResume() {
+		super.onResume();
+		tracker.setCustomVar(1, "SearchKeyword", mQuery);
+		tracker.trackPageView("/SearchResult");
+
+		StarredSender.getInstance().startStarredDispatcher(getApplicationContext());
+	}
+
+	protected void onPause() {
+		super.onPause();
+		StarredSender.getInstance().stop();
+	}
 
     @Override
     public void onNewIntent(Intent intent) {

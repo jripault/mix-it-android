@@ -33,8 +33,10 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import fr.mixit.android.R;
 import fr.mixit.android.provider.MixItContract;
+import fr.mixit.android.service.StarredSender;
 import fr.mixit.android.utils.NotifyingAsyncQueryHandler;
 import fr.mixit.android.utils.UIUtils;
 
@@ -47,6 +49,7 @@ public class TracksActivity extends ListActivity implements NotifyingAsyncQueryH
     private TracksAdapter mAdapter;
 
     private NotifyingAsyncQueryHandler mHandler;
+	private final GoogleAnalyticsTracker tracker = GoogleAnalyticsTracker.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +75,18 @@ public class TracksActivity extends ListActivity implements NotifyingAsyncQueryH
         mHandler = new NotifyingAsyncQueryHandler(getContentResolver(), this);
         mHandler.startQuery(tracksUri, TracksQuery.PROJECTION_WITH_SESSIONS_COUNT, MixItContract.Tracks.SESSIONS_COUNT + ">0", null, MixItContract.Tracks.DEFAULT_SORT);
     }
+
+	protected void onResume() {
+		super.onResume();
+		tracker.trackPageView("/TracksList");
+
+		StarredSender.getInstance().startStarredDispatcher(getApplicationContext());
+	}
+
+	protected void onPause() {
+		super.onPause();
+		StarredSender.getInstance().stop();
+	}
 
     /** {@inheritDoc} */
     public void onQueryComplete(int token, Object cookie, Cursor cursor) {

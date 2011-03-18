@@ -36,6 +36,7 @@ import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import fr.mixit.android.R;
 import fr.mixit.android.provider.MixItContract;
 import fr.mixit.android.utils.NotifyingAsyncQueryHandler;
@@ -68,6 +69,7 @@ public class StarredActivity extends TabActivity implements NotifyingAsyncQueryH
     private SharedPreferences settingsPrefs;
     
     private int starredSessionCount = 0;
+	private final GoogleAnalyticsTracker tracker = GoogleAnalyticsTracker.getInstance();
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +104,11 @@ public class StarredActivity extends TabActivity implements NotifyingAsyncQueryH
         mHandler = new NotifyingAsyncQueryHandler(getContentResolver(), this);
         mHandler.startQuery(MixItContract.Sessions.CONTENT_STARRED_URI, SessionsQuery.PROJECTION);
     }
+
+	protected void onResume() {
+		super.onResume();
+		tracker.trackPageView("/StarredList");
+	}
 
 /*    @Override
 	public Object onRetainNonConfigurationInstance() {

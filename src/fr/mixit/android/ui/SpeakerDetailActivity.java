@@ -21,8 +21,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
 import android.widget.ImageButton;
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import fr.mixit.android.R;
 import fr.mixit.android.provider.MixItContract;
+import fr.mixit.android.service.StarredSender;
 import fr.mixit.android.ui.widget.SpeakerImageView;
 import fr.mixit.android.utils.NotifyingAsyncQueryHandler;
 import fr.mixit.android.utils.SyncUtils;
@@ -78,6 +80,7 @@ public class SpeakerDetailActivity extends TabActivity implements NotifyingAsync
     private File cacheDir;
 
     private NotifyingAsyncQueryHandler mHandler;
+	private final GoogleAnalyticsTracker tracker = GoogleAnalyticsTracker.getInstance();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -138,6 +141,20 @@ public class SpeakerDetailActivity extends TabActivity implements NotifyingAsync
 
         mHandler = new NotifyingAsyncQueryHandler(getContentResolver(), this);
         mHandler.startQuery(mSpeakerUri, SpeakersQuery.PROJECTION);
+
+		StarredSender.getInstance().startStarredDispatcher(getApplicationContext());
+	}
+
+	protected void onResume() {
+		super.onResume();
+		tracker.trackPageView("/SpeakerDetail");
+
+		StarredSender.getInstance().startStarredDispatcher(getApplicationContext());
+	}
+
+	protected void onPause() {
+		super.onPause();
+		StarredSender.getInstance().stop();
 	}
 
     /** Build and add "bio" tab. */
@@ -188,6 +205,9 @@ public class SpeakerDetailActivity extends TabActivity implements NotifyingAsync
 	        mBlog.setVisibility(mBlogURL != null && mBlogURL.length() > 0 ? View.VISIBLE : View.GONE);
             mBio.setText(cursor.getString(SpeakersQuery.BIO));
 
+	        tracker.setCustomVar(3, "SpeakerName", cursor.getString(SpeakersQuery.LAST_NAME) + " " + cursor.getString(SpeakersQuery.FIRST_NAME));
+	        tracker.trackPageView("/SpeakerDetail");
+
             Bitmap speakerImage = loadImageFromCache();
             if (speakerImage != null) {
             	setSpeakerImage(speakerImage, false);
@@ -199,7 +219,7 @@ public class SpeakerDetailActivity extends TabActivity implements NotifyingAsync
             cursor.close();
         }
     }
-    
+
     /** Handle "home" title-bar action. */
     public void onHomeClick(View v) {
         UIUtils.goHome(this);

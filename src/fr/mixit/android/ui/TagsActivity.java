@@ -28,8 +28,10 @@ import android.provider.BaseColumns;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import fr.mixit.android.R;
 import fr.mixit.android.provider.MixItContract;
+import fr.mixit.android.service.StarredSender;
 import fr.mixit.android.utils.NotifyingAsyncQueryHandler;
 import fr.mixit.android.utils.UIUtils;
 
@@ -41,6 +43,7 @@ public class TagsActivity extends ListActivity implements NotifyingAsyncQueryHan
     private TagsAdapter mAdapter;
 
     private NotifyingAsyncQueryHandler mHandler;
+	private final GoogleAnalyticsTracker tracker = GoogleAnalyticsTracker.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +69,18 @@ public class TagsActivity extends ListActivity implements NotifyingAsyncQueryHan
         mHandler = new NotifyingAsyncQueryHandler(getContentResolver(), this);
         mHandler.startQuery(tagsUri, TagsQuery.PROJECTION_WITH_SESSIONS_COUNT, MixItContract.Tags.SESSIONS_COUNT + ">0", null, MixItContract.Tags.DEFAULT_SORT);
     }
+
+	protected void onResume() {
+		super.onResume();
+		tracker.trackPageView("/TagsList");
+
+		StarredSender.getInstance().startStarredDispatcher(getApplicationContext());
+	}
+
+	protected void onPause() {
+		super.onPause();
+		StarredSender.getInstance().stop();
+	}
 
     /** {@inheritDoc} */
     public void onQueryComplete(int token, Object cookie, Cursor cursor) {

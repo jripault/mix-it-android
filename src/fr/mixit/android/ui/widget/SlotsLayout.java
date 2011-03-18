@@ -26,6 +26,7 @@ import android.util.SparseIntArray;
 import android.view.View;
 import android.view.ViewGroup;
 import fr.mixit.android.R;
+import fr.mixit.android.utils.UIUtils;
 
 /**
  * Custom layout that contains and organizes a {@link TimeRulerView} and several
@@ -110,7 +111,8 @@ public class SlotsLayout extends ViewGroup {
         final TimeRulerView rulerView = mRulerView;
         final int nrColumns = getColumns();
         final int headerWidth = rulerView.getHeaderWidth();
-        final int columnWidth = (getWidth() - headerWidth) / nrColumns;
+	    // TODO : be independent pixels
+        final int columnWidth = (getWidth() - headerWidth - UIUtils.dipToPixel(getContext(), 66)) / nrColumns;//30 - 60 - 100 - 150
 
         rulerView.layout(0, 0, getWidth(), getHeight());
 
@@ -124,7 +126,7 @@ public class SlotsLayout extends ViewGroup {
                 final int columnIndex = getColumnIndex(slotView);
                 final int top = rulerView.getTimeVerticalOffset(slotView.getStartTime());
                 final int bottom = rulerView.getTimeVerticalOffset(slotView.getEndTime());
-                final int left = headerWidth + (columnIndex * columnWidth);
+                final int left = headerWidth + (columnIndex * columnWidth) + UIUtils.dipToPixel(getContext(), 33);//((columnIndex + 1) * (30 / nrColumns+1)); //15 - 30 - 50 - 75
                 final int right = left + columnWidth;
                 child.layout(left, top, right, bottom);
             }

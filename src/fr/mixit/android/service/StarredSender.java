@@ -45,6 +45,7 @@ public class StarredSender {
 	private Runnable dispatchRunner;
 	private static String mUserId;
 	private static int DISPATCH_PERIOD = 15;
+	private boolean isStopped = true;
 
 	private StarredSender() {
 	    super();
@@ -71,32 +72,33 @@ public class StarredSender {
 		if (mDebugMode)
 			Log.d(TAG, "startStarredDispatcher(Context context)");
 
-		mContext = context;
+		if (isStopped) {
+			mContext = context;
 
-		starredStore = new PersistentStarredStore(new PersistentStarredStore.DataBaseHelper(context));
+			starredStore = new PersistentStarredStore(new PersistentStarredStore.DataBaseHelper(context));
 
-		dispatcher = new NetworkDispatcher();
+			dispatcher = new NetworkDispatcher();
 
-		final Dispatcher.Callbacks callbacks = new DispatcherCallbacks();
+			final Dispatcher.Callbacks callbacks = new DispatcherCallbacks();
 
-		dispatcher.init(callbacks);
-		dispatcherIsBusy = false;
-		if (connectivityManager == null) {
-			connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+			dispatcher.init(callbacks);
+			dispatcherIsBusy = false;
+			if (connectivityManager == null) {
+				connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+			}
+			if (handler == null) {
+				handler = new Handler(context.getMainLooper());
+			} else {
+				cancelPendingDispatches();
+			}
+			setDispatchPeriod(DISPATCH_PERIOD);
+
+			mUserId = initUserId();
+
+			if (handler == null) {
+				handler = new Handler(mContext.getMainLooper());
+			}
 		}
-		if (handler == null) {
-			handler = new Handler(context.getMainLooper());
-		} else {
-			cancelPendingDispatches();
-		}
-		setDispatchPeriod(DISPATCH_PERIOD);
-
-		mUserId = initUserId();
-
-		if (handler == null) {
-			handler = new Handler(mContext.getMainLooper());
-		}
-
 	}
 
 	public String initUserId() {
@@ -211,8 +213,12 @@ public class StarredSender {
 	}
 
 	public void stop() {
-		dispatcher.stop();
-		cancelPendingDispatches();
+		if (!isStopped) {
+			dispatcher.stop();
+			cancelPendingDispatches();
+			starredStore.closeDataBase();
+			isStopped = true;
+		}
 	}
 
 	private static boolean performStarredSync(Context context) {

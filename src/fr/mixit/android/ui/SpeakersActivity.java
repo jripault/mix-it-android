@@ -15,8 +15,10 @@ import android.text.Spannable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import fr.mixit.android.R;
 import fr.mixit.android.provider.MixItContract;
+import fr.mixit.android.service.StarredSender;
 import fr.mixit.android.ui.widget.PinnedHeaderListView;
 import fr.mixit.android.utils.NotifyingAsyncQueryHandler;
 import fr.mixit.android.utils.UIUtils;
@@ -33,6 +35,7 @@ public class SpeakersActivity extends ListActivity implements NotifyingAsyncQuer
 	private NotifyingAsyncQueryHandler mHandler;
 
 	private int mPinnedHeaderBackgroundColor;
+	private final GoogleAnalyticsTracker tracker = GoogleAnalyticsTracker.getInstance();
 
 
     public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +71,21 @@ public class SpeakersActivity extends ListActivity implements NotifyingAsyncQuer
 	    mHandler = new NotifyingAsyncQueryHandler(getContentResolver(), this);
 	    mHandler.startQuery(speakersUri, projection, MixItContract.Speakers.DEFAULT_SORT);
     }
+
+	protected void onResume() {
+		super.onResume();
+		final Uri speakersUri = getIntent().getData();
+		if (!MixItContract.Speakers.isSearchUri(speakersUri)) {
+			tracker.trackPageView("/SpeakersList");
+		}
+
+		StarredSender.getInstance().startStarredDispatcher(getApplicationContext());
+	}
+
+	protected void onPause() {
+		super.onPause();
+		StarredSender.getInstance().stop();
+	}
 
 	private void setupListView(Intent intent) {
     	if (mAdapter instanceof SpeakersAdapter) {
