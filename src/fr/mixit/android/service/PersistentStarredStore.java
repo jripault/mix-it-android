@@ -14,7 +14,7 @@ import fr.mixit.android.model.SessionStarred;
 
 class PersistentStarredStore implements StarredStore {
 
-	private static final boolean mDebugMode = true;
+	private static final boolean mDebugMode = false;
 	private static final String TAG = "PersistentStarredStore";
 
 

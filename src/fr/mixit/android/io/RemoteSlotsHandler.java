@@ -84,6 +84,12 @@ public class RemoteSlotsHandler extends JSONHandler {
 			        }
 			        builder.withValue(MixItContract.Slots.SLOT_END, endTime);
 			        builder.withValue(MixItContract.Slots.SLOT_TYPE, slot.getString("kind"));
+			        if (slot.has("title")) {
+				        builder.withValue(MixItContract.Slots.SLOT_TITLE, slot.getString("title"));
+			        }
+			        else {
+			            builder.withValue(MixItContract.Slots.SLOT_TITLE, slot.getString("kind"));
+			        }
 					build = true;
 		        }
 		        if (build) batch.add(builder.build());
@@ -115,13 +121,16 @@ public class RemoteSlotsHandler extends JSONHandler {
             final long curStart = cursor.getLong(SlotsQuery.SLOT_START);
         	final long curEnd = cursor.getLong(SlotsQuery.SLOT_END);
         	final String curType = cursor.getString(SlotsQuery.SLOT_TYPE).toLowerCase().trim();
+        	final String curTitle = cursor.getString(SlotsQuery.SLOT_TITLE).toLowerCase().trim();
 	        final long newStart = slot.has("startTime") ? startTime : curStart;
 	        final long newEnd = slot.has("endTime") ? endTime : curEnd;
         	final String newType = slot.has("kind") ? slot.getString("kind").toLowerCase().trim() : curType;
+        	final String newTitle = slot.has("title") ? slot.getString("title").toLowerCase().trim() : curTitle;
 
         	return (!(curStart != newStart)
         			|| !(curEnd != newEnd)
-        			|| !curType.equals(newType));
+        			|| !curType.equals(newType)
+        			|| !curTitle.equals(newTitle));
         } finally {
             cursor.close();
         }
@@ -134,12 +143,14 @@ public class RemoteSlotsHandler extends JSONHandler {
                 MixItContract.Slots.SLOT_START,
                 MixItContract.Slots.SLOT_END,
                 MixItContract.Slots.SLOT_TYPE,
+                MixItContract.Slots.SLOT_TITLE,
         };
 
         int SLOT_ID = 0;
         int SLOT_START= 1;
         int SLOT_END = 2;
         int SLOT_TYPE = 3;
+        int SLOT_TITLE = 4;
     }
 
 }

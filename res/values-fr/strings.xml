@@ -101,7 +101,7 @@
 
 	<string name="about_text1">Basée sur l\'application Devoxx 2010 Schedule, qui a été publiée sous la licence Apache 2.0.</string>
 	<string name="about_text2">Le code source a été modifié pour la conférence MixIt par :</string>
-	<string name="about_text3">Mathieu Calba\r\nmathieu.calba@gmail.com\r\nhttp://twitter.com/Mathieu_Calba</string>
+	<string name="about_text3">L\'équipe de développeur Mix-It\r\ndeveloper@mix-it.fr</string>
 	<string name="about_text4">Le Code source est disponible à https://github.com/jripault/mix-it-android</string>
 	<string name="about_text5">Version %s</string>
 

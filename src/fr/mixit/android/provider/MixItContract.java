@@ -30,8 +30,10 @@ public class MixItContract {
 	    String SLOT_START = "slot_start";
 	    /** Time when this slot ends. */
 	    String SLOT_END = "slot_end";
-	    /** Type describing this slot. */
-	    String SLOT_TYPE = "slot_type";
+		/** Type describing this slot. */
+		String SLOT_TYPE = "slot_type";
+		/** Title describing this slot. */
+		String SLOT_TITLE = "slot_title";
 	}
 
 	interface TracksColumns {

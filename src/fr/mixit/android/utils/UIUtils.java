@@ -54,7 +54,7 @@ public class UIUtils {
 	public static final long CONFERENCE_START_MILLIS = ParserUtils.parseTime(
 	        "2011-04-05T08:30:00.000+01:00");
 	public static final long CONFERENCE_END_MILLIS = ParserUtils.parseTime(
-	        "2011-04-05T19:00:00.000+01:00");
+	        "2011-04-05T18:30:00.000+01:00");
 
 	private static final int DAY_FLAGS = DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_ABBREV_WEEKDAY;
 	private static final int TIME_FLAGS = DateUtils.FORMAT_SHOW_TIME;

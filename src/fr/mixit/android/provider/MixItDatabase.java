@@ -193,7 +193,8 @@ public class MixItDatabase extends SQLiteOpenHelper {
 		        + SlotsColumns.SLOT_ID + " TEXT NOT NULL,"
 		        + SlotsColumns.SLOT_START + " INTEGER NOT NULL,"
 		        + SlotsColumns.SLOT_END + " INTEGER NOT NULL,"
-		        + SlotsColumns.SLOT_TYPE + " TEXT NOT NULL,"
+				+ SlotsColumns.SLOT_TYPE + " TEXT NOT NULL,"
+				+ SlotsColumns.SLOT_TITLE + " TEXT NOT NULL,"
 		        + "UNIQUE (" + SlotsColumns.SLOT_ID + ") ON CONFLICT REPLACE)");
 
 		db.execSQL("CREATE TABLE " + Tables.TRACKS + " ("

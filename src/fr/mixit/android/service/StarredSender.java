@@ -12,7 +12,7 @@ import fr.mixit.android.ui.SettingsActivity;
 
 public class StarredSender {
 
-	private static final boolean mDebugMode = true;
+	private static final boolean mDebugMode = false;
 	private static final String TAG = "StarredSender";
 
 	private Handler handler;

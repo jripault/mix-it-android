@@ -79,8 +79,8 @@ public class SlotsActivity extends Activity implements NotifyingAsyncQueryHandle
 
 	    ((TextView) findViewById(R.id.title_text)).setText(R.string.title_schedule);
 
-        mTimeStart = ParserUtils.parseTime("2011-04-05T08:00:00.000+01:00");
-        mTimeEnd = ParserUtils.parseTime("2011-04-05T20:00:00.000+01:00");
+        mTimeStart = ParserUtils.parseTime("2011-04-05T07:00:00.000+01:00");
+        mTimeEnd = ParserUtils.parseTime("2011-04-05T18:00:00.000+01:00");
 
         mScrollView = (ScrollView) findViewById(R.id.slots_scroll);
         mSlots = (SlotsLayout) findViewById(R.id.slots);
@@ -133,21 +133,18 @@ public class SlotsActivity extends Activity implements NotifyingAsyncQueryHandle
         try {
         	while (cursor.moveToNext()) {
                 final String type = cursor.getString(SlotsQuery.SLOT_TYPE);
-/*		        final Integer column = ParserUtils.sTypeColumnMap.get(type);
-		        // TODO: place random slots at bottom of entire layout
-		        if (column == null) continue;*/
 		        final int column = 0;
 		        final Integer color = ParserUtils.sTypeColumnMap.get(type);
 		        // TODO: place random slots at bottom of entire layout
 		        if (color == null) continue;
 
                 final String slotId = cursor.getString(SlotsQuery.SLOT_ID);
-                final String title = cursor.getString(SlotsQuery.SLOT_TYPE);//SLOT_TITLE
+                final String title = cursor.getString(SlotsQuery.SLOT_TITLE);
                 final long start = cursor.getLong(SlotsQuery.SLOT_START);
                 final long end = cursor.getLong(SlotsQuery.SLOT_END);
                 final boolean containsStarred = cursor.getInt(SlotsQuery.CONTAINS_STARRED) != 0;
 
-                final SlotView slotView = new SlotView(this, slotId, title, start, end,
+                final SlotView slotView = new SlotView(this, slotId, title != null ? title : type, start, end,
                         containsStarred, column, color);
 
                 final int sessionsCount = cursor.getInt(SlotsQuery.SESSIONS_COUNT);
@@ -225,7 +222,7 @@ public class SlotsActivity extends Activity implements NotifyingAsyncQueryHandle
         String[] PROJECTION = {
                 BaseColumns._ID,
                 MixItContract.Slots.SLOT_ID,
-//                MixItContract.Slots.SLOT_TITLE,
+                MixItContract.Slots.SLOT_TITLE,
                 MixItContract.Slots.SLOT_START,
                 MixItContract.Slots.SLOT_END,
                 MixItContract.Slots.SLOT_TYPE,
@@ -235,12 +232,12 @@ public class SlotsActivity extends Activity implements NotifyingAsyncQueryHandle
 
         int _ID = 0;
         int SLOT_ID = 1;
-//        int SLOT_TITLE = 2;
-        int SLOT_START = 2;
-        int SLOT_END = 3;
-        int SLOT_TYPE = 4;
-        int SESSIONS_COUNT = 5;
-        int CONTAINS_STARRED = 6;
+        int SLOT_TITLE = 2;
+        int SLOT_START = 3;
+        int SLOT_END = 4;
+        int SLOT_TYPE = 5;
+        int SESSIONS_COUNT = 6;
+        int CONTAINS_STARRED = 7;
     }
     
 }

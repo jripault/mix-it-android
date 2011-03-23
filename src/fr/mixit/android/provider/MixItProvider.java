@@ -22,7 +22,7 @@ public class MixItProvider extends ContentProvider {
 
 	private static final String TAG = "MixItProvider";
 
-	private static final boolean LOGV = Log.isLoggable(TAG, Log.VERBOSE);
+	private static final boolean LOGV = false;
 
 	private static final int SESSIONS = 100;
 	private static final int SESSIONS_STARRED = 101;

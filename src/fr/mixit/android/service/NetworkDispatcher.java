@@ -29,7 +29,7 @@ import android.util.Log;
 public class NetworkDispatcher implements Dispatcher {
 
 	private static final String TAG = "StarredNetworkDispatcher";
-	private static final boolean mDebugMode = true;
+	private static final boolean mDebugMode = false;
 
 	private static final int MAX_EVENTS_PER_PIPELINE = 30;
 	private static final int MAX_SEQUENTIAL_REQUESTS = 5;
