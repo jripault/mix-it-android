@@ -27,7 +27,11 @@ public class StarredSender {
 		}
 
 		public void eventDispatched(long l) {
+			if (starredStore == null)
+				starredStore = new PersistentStarredStore(new PersistentStarredStore.DataBaseHelper(mContext));
 			starredStore.deleteSessionStarred(l);
+			starredStore.closeDataBase();
+			starredStore = null;
 		}
 
 		DispatcherCallbacks() {
@@ -75,8 +79,6 @@ public class StarredSender {
 		if (isStopped) {
 			mContext = context;
 
-			starredStore = new PersistentStarredStore(new PersistentStarredStore.DataBaseHelper(context));
-
 			dispatcher = new NetworkDispatcher();
 
 			final Dispatcher.Callbacks callbacks = new DispatcherCallbacks();
@@ -121,7 +123,12 @@ public class StarredSender {
 		if (mDebugMode) {
 			Log.d(TAG, "newSessionStarred(): sessionId : " + sessionId + " at state : " + state);
 		}
+
+		if (starredStore == null)
+			starredStore = new PersistentStarredStore(new PersistentStarredStore.DataBaseHelper(mContext));
 		starredStore.putSessionStarred(new SessionStarred(sessionId, state));
+		starredStore.closeDataBase();
+		starredStore = null;
 		resetPowerSaveMode();
 	}
 
@@ -185,17 +192,25 @@ public class StarredSender {
 				maybeScheduleNextDispatch();
 				return false;
 			}
+
+			if (starredStore == null)
+				starredStore = new PersistentStarredStore(new PersistentStarredStore.DataBaseHelper(mContext));
+
 			if (starredStore.getNumStoredSessionStarreds() != 0) {
 
 				if (mDebugMode)
 					Log.d(TAG, "Requests to send found, dispatch");
 
 				SessionStarred starredSessions[] = starredStore.peekSessionStarreds();
+				starredStore.closeDataBase();
+				starredStore = null;
 				dispatcher.dispatchSessions(starredSessions);
 				dispatcherIsBusy = true;
 				maybeScheduleNextDispatch();
 				return true;
 			} else {
+				starredStore.closeDataBase();
+				starredStore = null;
 				if (mDebugMode)
 					Log.d(TAG, "No request to send");
 
@@ -216,7 +231,8 @@ public class StarredSender {
 		if (!isStopped) {
 			dispatcher.stop();
 			cancelPendingDispatches();
-			starredStore.closeDataBase();
+//			starredStore.closeDataBase();
+//			starredStore = null;
 			isStopped = true;
 		}
 	}

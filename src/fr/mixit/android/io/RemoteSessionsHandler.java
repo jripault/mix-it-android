@@ -116,7 +116,10 @@ public class RemoteSessionsHandler extends JSONHandler {
 	            		final boolean sessionSpeakersUpdated = isSessionSpeakersUpdated(speakerSessionsUri, speakers, resolver);
 			    		if (sessionSpeakersUpdated) {
 				    		Log.d(TAG, "Speakers of session with sessionId " + sessionId + " was udpated.");
-				    		batch.add(ContentProviderOperation.newUpdate(sessionUri).build());
+
+                           batch.add(ContentProviderOperation.newUpdate(sessionUri)
+                                   .withValue(MixItContract.Sessions.UPDATED, true)
+                                   .build());
 			    		}
 			    	}
 			    	
@@ -146,7 +149,9 @@ public class RemoteSessionsHandler extends JSONHandler {
 		                final boolean sessionTagsUpdated = isSessionTagsUpdated(tagSessionsUri, tags, resolver);
 				        if (sessionTagsUpdated) {
 					        Log.d(TAG, "Tags of session with sessionId " + sessionId + " was udpated.");
-					        batch.add(ContentProviderOperation.newUpdate(sessionUri).build());
+					        batch.add(ContentProviderOperation.newUpdate(sessionUri)
+					                .withValue(MixItContract.Sessions.UPDATED, true)
+					                .build());
 				        }
 			        }
 

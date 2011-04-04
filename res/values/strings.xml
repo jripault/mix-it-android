@@ -100,7 +100,7 @@
 
 	<string name="about_text1">Based on the Devoxx 2010 Schedule application, which was released under the Apache 2.0 license.</string>
 	<string name="about_text2">Source code modified for the MixIt Conference by:</string>
-	<string name="about_text3">The developer team Mix-It\r\ndeveloper@mix-it.fr</string>
+	<string name="about_text3">The developers\' team Mix-It\r\ndeveloper@mix-it.fr</string>
 	<string name="about_text4">Source code available at https://github.com/jripault/mix-it-android</string>
 	<string name="about_text5">Version %s</string>
 
